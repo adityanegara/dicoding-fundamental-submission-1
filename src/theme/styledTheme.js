@@ -10,9 +10,9 @@ const theme = {
       darker: "#349ee5",
     },
     neutral: {
-      white: "#F2F2F2",
-      gray: "#F9F9FA",
-      darkGray: "#F3F3F5",
+      white: "#FFFFFF",
+      gray: "#F3F3F5",
+      darkGray: "#DADADC",
       black: "#1E2225",
     },
   },

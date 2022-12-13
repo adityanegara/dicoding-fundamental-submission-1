@@ -7,7 +7,7 @@ import theme from "./styledTheme";
 const global = css({
   ["body"]: {
     margin: 0,
-    backgroundColor: theme.colors.neutral.darkGray,
+    backgroundColor: theme.colors.neutral.gray,
     boxSizing: "border-box",
     padding: 0,
     overflowX: "hidden",
