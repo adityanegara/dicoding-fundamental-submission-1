@@ -7,6 +7,7 @@ import global from "./theme/global";
 import Navbar from "./components/Navbar";
 import Container from "./components/Container";
 import Homepage from "./components/pages/Homepage";
+import CreatePage from "./components/pages/CreatePage";
 
 const AppContainer = styled.div({
   paddingBottom: "10vh",
@@ -22,7 +23,7 @@ const App = () => {
         <Container>
           <Routes>
             <Route path="/" element={<Homepage/>}/>
-            <Route path="/create" element={<div>Create</div>}/>
+            <Route path="/create" element={<CreatePage/>}/>
           </Routes>
         </Container>
         </AppContainer>

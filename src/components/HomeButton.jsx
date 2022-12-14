@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
-import createIcon from "../assets/plus.svg";
+import homeIcon from "../assets/home.svg";
 
 const LinkWrapper = styled(Link)(({ theme }) => ({
   display: "flex",
@@ -25,8 +25,8 @@ const LinkWrapper = styled(Link)(({ theme }) => ({
   }
 }));
 
-const CreateButton = () => {
-  return <LinkWrapper to="/create"><img src={createIcon} alt="create"/></LinkWrapper>;
+const HomeButton = () => {
+  return <LinkWrapper to="/"><img src={homeIcon} alt="create"/></LinkWrapper>;
 };
 
-export default CreateButton;
+export default HomeButton;
