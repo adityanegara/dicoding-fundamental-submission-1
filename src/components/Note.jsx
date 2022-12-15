@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import elipsisOnText from "../helpers/elipsisOnText";
+import notesStore from "../store/noteStore";
 
 const NoteWrapper = styled.div(({ theme }) => ({
   backgroundColor: theme.colors.neutral.white,
   border: `1px solid ${theme.colors.neutral.darkGray}`,
   width: "100%",
-  height: "200px",
   small:{
     fontSize: "0.7em",
     color: theme.colors.neutral.darkGray
@@ -53,18 +53,19 @@ const NoteWrapper = styled.div(({ theme }) => ({
   },
 }));
 
-const Note = () => {
+const Note = ({id, title, body, isEdited, createdAt}) => {
+  const deleteNote = notesStore((state) => state.deleteNote);
   return (
     <NoteWrapper>
       <div className="note-content">
-        <h3>{elipsisOnText("Judul", 20)}</h3>
+        <h3>{elipsisOnText(title, 20)}</h3>
         <p>
-          {elipsisOnText("Deskripsi...", 80)}
+          {elipsisOnText(body, 70)}
         </p>
-        <small>Created at, December 15th 2022</small>
+        <small>{createdAt}</small>
         <div className="button-group">
           <Link to="/detail" className="detail-button">Detail</Link>
-          <button className="delete-button">Delete</button>
+          <button className="delete-button" onClick={()=>{deleteNote(id)}}>Delete</button>
         </div>
       </div>
     </NoteWrapper>

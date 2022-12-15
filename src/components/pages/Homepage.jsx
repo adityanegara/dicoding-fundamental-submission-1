@@ -4,8 +4,10 @@ import CreateButton from "../CreateButtton";
 import SearchInput from "../SearchInput";
 import NoteNavigation from "../NoteNavigation";
 import Note from "../Note";
+import notesStore from "../../store/noteStore";
 
 const HomePage = () => {
+  const notes = notesStore((state) => state.notes);
   const [inputValue, setInputValue] = useState("");
 
   const NoteContainer = styled.ul(({ theme }) => ({
@@ -23,16 +25,28 @@ const HomePage = () => {
       marginTop: "5vh",
       gridTemplateColumns: "1fr 1fr 1fr",
     },
-    ".empty-note": {
-      fontSize: "1.3em",
-    },
   }));
 
+  const EmptyNote = styled.p({
+    textAlign: "center",
+    fontSize: "1.3em",
+  });
+
   const renderNotes = (notes) => {
-    if (notes.length > 1) {
-      return notes.map((map) => <Note />);
-    }
-    return <p className=".empty-note">There is no note.</p>;
+    return notes.map((note) => (
+      <Note
+        key={note.id}
+        id={note.id}
+        title={note.title}
+        body={note.body}
+        isEdited={note.isEdited}
+        createdAt={note.createdAt}
+      />
+    ));
+  };
+
+  const renderEmptyText = (notes) => {
+    return notes.length === 0 ? <EmptyNote>There is no note.</EmptyNote> : null;
   };
 
   return (
@@ -43,10 +57,8 @@ const HomePage = () => {
         setValue={setInputValue}
       />
       <NoteNavigation />
-      <NoteContainer>
-        <p className="empty-note">There is no note.</p>
-      </NoteContainer>
-
+      <NoteContainer>{renderNotes(notes)}</NoteContainer>
+      {renderEmptyText(notes)}
       <CreateButton />
     </>
   );
