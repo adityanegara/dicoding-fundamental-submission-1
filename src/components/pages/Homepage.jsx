@@ -23,7 +23,18 @@ const HomePage = () => {
       marginTop: "5vh",
       gridTemplateColumns: "1fr 1fr 1fr",
     },
+    ".empty-note": {
+      fontSize: "1.3em",
+    },
   }));
+
+  const renderNotes = (notes) => {
+    if (notes.length > 1) {
+      return notes.map((map) => <Note />);
+    }
+    return <p className=".empty-note">There is no note.</p>;
+  };
+
   return (
     <>
       <SearchInput
@@ -33,12 +44,7 @@ const HomePage = () => {
       />
       <NoteNavigation />
       <NoteContainer>
-        <Note />
-        <Note />
-        <Note />
-        <Note />
-        <Note />
-        <Note />
+        <p className="empty-note">There is no note.</p>
       </NoteContainer>
 
       <CreateButton />
