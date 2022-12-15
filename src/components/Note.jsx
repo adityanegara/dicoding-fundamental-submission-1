@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import elipsisOnText from "../helpers/elipsisOnText";
@@ -7,9 +8,9 @@ const NoteWrapper = styled.div(({ theme }) => ({
   backgroundColor: theme.colors.neutral.white,
   border: `1px solid ${theme.colors.neutral.darkGray}`,
   width: "100%",
-  small:{
+  small: {
     fontSize: "0.7em",
-    color: theme.colors.neutral.darkGray
+    color: theme.colors.neutral.darkGray,
   },
   [`@media only screen and (min-width: ${theme.layout.desktop})`]: {
     paddingBottom: "5px",
@@ -53,23 +54,42 @@ const NoteWrapper = styled.div(({ theme }) => ({
   },
 }));
 
-const Note = ({id, title, body, isEdited, createdAt}) => {
+const renderCreatedAt = (isEdited, createdAt) => {
+  return `${isEdited ? "Edited" : "Created"} at ${createdAt}`;
+};
+
+const Note = ({ id, title, body, isEdited, createdAt }) => {
   const deleteNote = notesStore((state) => state.deleteNote);
   return (
     <NoteWrapper>
       <div className="note-content">
         <h3>{elipsisOnText(title, 20)}</h3>
-        <p>
-          {elipsisOnText(body, 70)}
-        </p>
-        <small>{createdAt}</small>
+        <p>{elipsisOnText(body, 70)}</p>
+        <small>{renderCreatedAt(isEdited, createdAt)}</small>
         <div className="button-group">
-          <Link to="/detail" className="detail-button">Detail</Link>
-          <button className="delete-button" onClick={()=>{deleteNote(id)}}>Delete</button>
+          <Link to={`/detail/${id}`} className="detail-button">
+            Detail
+          </Link>
+          <button
+            className="delete-button"
+            onClick={() => {
+              deleteNote(id);
+            }}
+          >
+            Delete
+          </button>
         </div>
       </div>
     </NoteWrapper>
   );
+};
+
+Note.defaultProps = {
+  id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
+  isEdited: PropTypes.bool.isRequired,
+  createdAt: PropTypes.string.isRequired,
 };
 
 export default Note;
