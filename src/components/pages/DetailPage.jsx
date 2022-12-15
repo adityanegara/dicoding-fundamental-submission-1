@@ -16,16 +16,25 @@ const FormWrapper = styled.form(({ theme }) => ({
   button: {
     width: "100%",
     border: `1px solid ${theme.colors.neutral.gray}`,
-    color: theme.colors.neutral.white,
-    backgroundColor: theme.colors.primary.normal,
     borderRadius: "5px",
     cursor: "pointer",
     width: "100%",
     fontSize: "1.1em",
     transition: "ease-in 0.2s",
   },
-  "button:hover": {
+  ".edit-button": {
+    color: theme.colors.neutral.white,
+    backgroundColor: theme.colors.primary.normal,
+  },
+  ".edit-button:hover": {
     backgroundColor: theme.colors.primary.darker,
+  },
+  ".delete-button": {
+    color: theme.colors.primary.normal,
+    backgroundColor: theme.colors.neutral.gray,
+  },
+  ".delete-button:hover": {
+    backgroundColor: theme.colors.neutral.darkGray,
   },
   img: {
     width: "15px",
@@ -67,7 +76,7 @@ const TextAreaWrapper = styled.textarea(({ theme }) => ({
   },
 }));
 
-const CreatePage = () => {
+const DetailPage = () => {
   const theme = useTheme();
   return (
     <>
@@ -87,11 +96,12 @@ const CreatePage = () => {
           style={{ backgroundColor: theme.colors.neutral.white }}
           label="Archived"
         />
-        <button type="submit">Create</button>
+        <button type="submit" className="edit-button">Edit</button>
+        <button className="delete-button">Delete</button>
       </FormWrapper>
       <HomeButton />
     </>
   );
 };
 
-export default CreatePage;
+export default DetailPage;

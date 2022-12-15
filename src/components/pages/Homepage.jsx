@@ -5,7 +5,7 @@ import SearchInput from "../SearchInput";
 import NoteNavigation from "../NoteNavigation";
 import Note from "../Note";
 
-const Homepage = () => {
+const HomePage = () => {
   const [inputValue, setInputValue] = useState("");
 
   const NoteContainer = styled.ul(({ theme }) => ({
@@ -46,4 +46,4 @@ const Homepage = () => {
   );
 };
 
-export default Homepage;
+export default HomePage;

@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 import elipsisOnText from "../helpers/elipsisOnText";
 
 const NoteWrapper = styled.div(({ theme }) => ({
@@ -6,6 +7,10 @@ const NoteWrapper = styled.div(({ theme }) => ({
   border: `1px solid ${theme.colors.neutral.darkGray}`,
   width: "100%",
   height: "200px",
+  small:{
+    fontSize: "0.7em",
+    color: theme.colors.neutral.darkGray
+  },
   [`@media only screen and (min-width: ${theme.layout.desktop})`]: {
     paddingBottom: "5px",
   },
@@ -19,7 +24,11 @@ const NoteWrapper = styled.div(({ theme }) => ({
     marginTop: "10px",
     display: "flex",
     gap: "5px",
-    button: {
+    "button, a": {
+      textDecoration: "none",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       border: `1px solid ${theme.colors.neutral.white}`,
       borderRadius: "5px",
       transition: "ease-in 0.2s",
@@ -52,8 +61,9 @@ const Note = () => {
         <p>
           {elipsisOnText("Deskripsi...", 80)}
         </p>
+        <small>Created at, December 15th 2022</small>
         <div className="button-group">
-          <button className="detail-button">Detail</button>
+          <Link to="/detail" className="detail-button">Detail</Link>
           <button className="delete-button">Delete</button>
         </div>
       </div>
