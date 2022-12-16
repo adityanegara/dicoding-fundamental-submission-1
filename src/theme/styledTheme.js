@@ -12,6 +12,8 @@ const theme = {
     neutral: {
       white: "#FFFFFF",
       gray: "#F3F3F5",
+      red: "#D0342C",
+      green: "#5CB85C",
       darkGray: "#c4c4c6",
       black: "#1E2225",
     },

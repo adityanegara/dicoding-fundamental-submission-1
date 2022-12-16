@@ -12,7 +12,7 @@ const notesStore = create((set) => ({
       createdAt: moment().format("MMMM Do YYYY, h:mm:ss a"),
     },
   ],
-  createNote: ({ title, body, archived }) => {
+  createNote: (title, body, archived) => {
     set((state) => ({
       notes: [
         {
