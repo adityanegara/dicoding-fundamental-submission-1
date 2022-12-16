@@ -4,7 +4,7 @@ import moment from "moment/moment";
 const notesStore = create((set) => ({
   notes: [
     {
-      id: "notes-1",
+      id: new Date().valueOf(),
       title: "Babel",
       body: "Babel merupakan tools open-source yang digunakan untuk mengubah sintaks ECMAScript 2015+ menjadi sintaks yang didukung oleh JavaScript engine versi lama. Babel sering dipakai ketika kita menggunakan sintaks terbaru termasuk sintaks JSX.",
       archived: false,
@@ -16,7 +16,7 @@ const notesStore = create((set) => ({
     set((state) => ({
       notes: [
         {
-          id: new Date(),
+          id: new Date().valueOf(),
           title,
           body,
           archived,
