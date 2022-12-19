@@ -5,10 +5,19 @@ import SearchInput from "../SearchInput";
 import NoteNavigation from "../NoteNavigation";
 import Note from "../Note";
 import notesStore from "../../store/noteStore";
+import uiStore from "../../store/uiStore";
 
 const HomePage = () => {
+  const isArchived = uiStore((state) => state.isArchived);
   const notes = notesStore((state) => state.notes);
   const [inputValue, setInputValue] = useState("");
+
+  const filterNote = (notes, isArchived) => {
+    if (isArchived) {
+      return notes.filter((note) => note.archived === true);
+    }
+    return notes;
+  };
 
   const NoteContainer = styled.ul(({ theme }) => ({
     listStyleType: "none",
@@ -57,7 +66,9 @@ const HomePage = () => {
         setValue={setInputValue}
       />
       <NoteNavigation />
-      <NoteContainer>{renderNotes(notes)}</NoteContainer>
+      <NoteContainer>
+        {renderNotes(filterNote(notes, isArchived))}
+      </NoteContainer>
       {renderEmptyText(notes)}
       <CreateButton />
     </>

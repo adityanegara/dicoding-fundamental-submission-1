@@ -1,11 +1,11 @@
 import styled from "@emotion/styled";
-import PropTypes from "prop-types";
+import uiStore from "../store/uiStore";
 
 const NoteNavigationWrapper = styled.div(({ theme }) => ({
   marginTop: "3vh",
   display: "flex",
   gap: "15px",
-  "button":{
+  button: {
     backgroundColor: theme.colors.neutral.gray,
     border: `1px solid ${theme.colors.neutral.gray}`,
     color: theme.colors.primary.normal,
@@ -15,23 +15,31 @@ const NoteNavigationWrapper = styled.div(({ theme }) => ({
     fontSize: "1.1em",
     transition: "ease-in 0.2s",
   },
-  "button:hover":{
+  "button:hover": {
     backgroundColor: theme.colors.neutral.darkGray,
   },
-  ".active":{
+  ".active": {
     color: theme.colors.neutral.white,
     backgroundColor: theme.colors.primary.normal,
   },
-  ".active:hover":{
+  ".active:hover": {
     backgroundColor: theme.colors.primary.darker,
-  }
+  },
 }));
 
 const NoteNavigation = () => {
+  const isArchived = uiStore((state) => state.isArchived);
+  const toggleAll = uiStore((state) => state.toggleAll);
+  const toggleArchived = uiStore((state) => state.toggleArchived);
+
   return (
     <NoteNavigationWrapper>
-      <button className="active">All</button>
-      <button>Archived</button>
+      <button onClick={toggleAll} className={!isArchived ? "active" : ""}>
+        All
+      </button>
+      <button onClick={toggleArchived} className={isArchived ? "active" : ""}>
+        Archived
+      </button>
     </NoteNavigationWrapper>
   );
 };
