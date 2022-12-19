@@ -6,7 +6,7 @@ import theme from "./theme/styledTheme";
 import global from "./theme/global";
 import Navbar from "./components/Navbar";
 import Container from "./components/Container";
-import Homepage from "./components/pages/HomePage";
+import HomePage from "./components/pages/Homepage";
 import CreatePage from "./components/pages/CreatePage";
 import DetailPage from "./components/pages/DetailPage";
 
@@ -23,7 +23,7 @@ const App = () => {
         <Navbar title="Note" />
         <Container>
           <Routes>
-            <Route path="/" element={<Homepage/>}/>
+            <Route path="/" element={<HomePage/>}/>
             <Route path="/create" element={<CreatePage/>}/>
             <Route path="/detail/:id" element={<DetailPage/>}/>
           </Routes>

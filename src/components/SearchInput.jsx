@@ -1,3 +1,5 @@
+import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import searchIcon from "../assets/search.svg";
@@ -50,17 +52,24 @@ const InputWrapper = styled.input(({ theme }) => ({
   },
 }));
 
-const SearchInput = ({ inputValue, setValue, placeHolder }) => {
+const SearchInput = ({ placeHolder }) => {
+  const [input, setInput] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
   return (
     <SearchInputWrapper>
       <InputWrapper
-        value={inputValue}
+        value={input}
         onChange={(e) => {
-          setValue(e.target.value);
+          setInput(e.target.value);
         }}
         placeholder={placeHolder}
       />
-      <button aria-label="Search">
+      <button
+        onClick={() => {
+          setSearchParams({ title: input });
+        }}
+        aria-label="Search"
+      >
         <img alt="search-icon" src={searchIcon} />
       </button>
     </SearchInputWrapper>
@@ -68,8 +77,6 @@ const SearchInput = ({ inputValue, setValue, placeHolder }) => {
 };
 
 SearchInput.defaultProps = {
-  inputValue: PropTypes.string.isRequired,
-  setValue: PropTypes.func.isRequired,
   placeHolder: PropTypes.string.isRequired,
 };
 

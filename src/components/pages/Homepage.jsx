@@ -6,17 +6,31 @@ import NoteNavigation from "../NoteNavigation";
 import Note from "../Note";
 import notesStore from "../../store/noteStore";
 import uiStore from "../../store/uiStore";
+import { useSearchParams } from "react-router-dom";
 
 const HomePage = () => {
   const isArchived = uiStore((state) => state.isArchived);
   const notes = notesStore((state) => state.notes);
   const [inputValue, setInputValue] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const filterNote = (notes, isArchived) => {
-    if (isArchived) {
-      return notes.filter((note) => note.archived === true);
+  const filterSearchInput = (searchInput, notes) => {
+    let keyword = searchInput;
+    if (searchInput === null) {
+      keyword = "";
     }
-    return notes;
+    return notes.filter((note) => {
+      if (note.title.toLowerCase().includes(keyword.toLowerCase())) {
+        return note;
+      }
+    });
+  };
+  const filterNote = (searchInput, notes, isArchived) => {
+    if (isArchived) {
+      const archivedNotes = notes.filter((note) => note.archived === true);
+      return filterSearchInput(searchInput, archivedNotes);
+    }
+    return filterSearchInput(searchInput, notes);
   };
 
   const NoteContainer = styled.ul(({ theme }) => ({
@@ -67,7 +81,7 @@ const HomePage = () => {
       />
       <NoteNavigation />
       <NoteContainer>
-        {renderNotes(filterNote(notes, isArchived))}
+        {renderNotes(filterNote(searchParams.get("title"), notes, isArchived))}
       </NoteContainer>
       {renderEmptyText(notes)}
       <CreateButton />
