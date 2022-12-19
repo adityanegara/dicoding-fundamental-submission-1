@@ -30,15 +30,16 @@ const notesStore = create((set) => ({
   updateNote: ({ id, title, body, archived }) => {
     set((state) => ({
       notes: state.notes.map((note) => {
-        if (note.id === id) {
+        if (note.id == id) {
           return {
             ...note,
-            title: title,
-            body: body,
+            title,
+            body,
+            archived,
             isEdited: true,
-            archived: archived,
           };
         } else {
+          console.log("dont found note");
           return note;
         }
       }),
