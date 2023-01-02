@@ -4,7 +4,7 @@ import Input from "../Input";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-const LoginContainer = styled.div(({ theme }) => ({
+const RegisterContainer = styled.div(({ theme }) => ({
   marginTop: "5vh",
   paddingBottom: "5vh",
   backgroundColor: theme.colors.neutral.white,
@@ -62,15 +62,33 @@ const LoginContainer = styled.div(({ theme }) => ({
   },
 }));
 
-const LoginPage = () => {
+const RegisterPage = () => {
+  const [name, setName] = useInput("");
   const [email, setEmail] = useInput("");
   const [password, setPassword] = useInput("");
+  const [confirmPassword, setConfirmPassword] = useInput("");
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState("");
 
-  const isFormEmpty = (email, password) => {
-    if (email === "" || password === "") {
+  const isFormEmpty = ({ name, email, password, confirmPassword }) => {
+    if (
+      name === "" ||
+      email === "" ||
+      password === "" ||
+      confirmPassword === ""
+    ) {
       setErrorText("Please fill all the input!");
+      setError(true);
+      return true;
+    }
+    setErrorText("");
+    setError(false);
+    return false;
+  };
+
+  const isPasswordAndConfirmPasswordSame = (password, confirmPassword) => {
+    if (!(password === confirmPassword)) {
+      setErrorText("Password must be the same as confirm password!");
       setError(true);
       return true;
     }
@@ -83,23 +101,26 @@ const LoginPage = () => {
     return error ? <p>{errorText}</p> : null;
   };
 
-  const handleSubmit = (e, email, password) => {
+  const handleSubmit = (e, { name, email, password, confirmPassword }) => {
     e.preventDefault();
-    if (isFormEmpty(email, password)) {
+    if (isFormEmpty({ name, email, password, confirmPassword })) {
     } else {
+      if (isPasswordAndConfirmPasswordSame(password, confirmPassword)) {
+      }
       console.log(email);
       console.log(password);
     }
   };
 
   return (
-    <LoginContainer>
-      <h3>Login</h3>
+    <RegisterContainer>
+      <h3>Register</h3>
       <form
         onSubmit={(e) => {
-          handleSubmit(e, email, password);
+          handleSubmit(e, { name, email, password, confirmPassword });
         }}
       >
+        <Input type="text" value={name} onChange={setName} placeholder="Name" />
         <Input
           type="email"
           value={email}
@@ -112,16 +133,22 @@ const LoginPage = () => {
           onChange={setPassword}
           placeholder="Password"
         />
-        <button>Login</button>
+        <Input
+          value={confirmPassword}
+          type="password"
+          onChange={setConfirmPassword}
+          placeholder="Confirm Password"
+        />
+        <button>Register</button>
         {renderErrorText(error)}
       </form>
       <div className="link-wrapper">
-        <Link to={`/register`} className="register-link">
-          Don't have an account? Sign up
+        <Link to={`/login`} className="register-link">
+          Have an account already? Log in
         </Link>
       </div>
-    </LoginContainer>
+    </RegisterContainer>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

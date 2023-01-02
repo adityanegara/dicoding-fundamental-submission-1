@@ -10,10 +10,11 @@ import HomePage from "./components/pages/Homepage";
 import CreatePage from "./components/pages/CreatePage";
 import DetailPage from "./components/pages/DetailPage";
 import LoginPage from "./components/pages/LoginPage";
+import RegisterPage from "./components/pages/RegisterPage";
 
 const AppContainer = styled.div({
   paddingBottom: "10vh",
-})
+});
 
 const App = () => {
   return (
@@ -21,15 +22,16 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <Global styles={global} />
         <AppContainer>
-        <Navbar title="Note" />
-        <Container>
-          <Routes>
-            <Route path="/" element={<HomePage/>}/>
-            <Route path="/create" element={<CreatePage/>}/>
-            <Route path="/detail/:id" element={<DetailPage/>}/>
-            <Route path="/login" element={<LoginPage/>}/>
-          </Routes>
-        </Container>
+          <Navbar title="Note" />
+          <Container>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/create" element={<CreatePage />} />
+              <Route path="/detail/:id" element={<DetailPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+            </Routes>
+          </Container>
         </AppContainer>
       </ThemeProvider>
     </BrowserRouter>
