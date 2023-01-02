@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { useTheme } from "@emotion/react";
+import { useNavigate } from "react-router-dom";
+import useInput from "../../hooks/useInput";
 import styled from "@emotion/styled";
 import Checkbox from "react-custom-checkbox";
 import HomeButton from "../HomeButton";
 import checklistIcon from "../../assets/checklist.svg";
 import notesStore from "../../store/noteStore";
+import Input from "../Input";
+import TextArea from "../TextArea";
 
 const FormWrapper = styled.form(({ theme }) => ({
   marginTop: "3vh",
@@ -47,43 +51,12 @@ const FormWrapper = styled.form(({ theme }) => ({
   },
 }));
 
-const InputWrapper = styled.input(({ theme }) => ({
-  backgroundColor: theme.colors.neutral.white,
-  border: `1px solid ${theme.colors.primary.normal}`,
-  borderRadius: "10px",
-  paddingBottom: "5px",
-  textIndent: "5px",
-  paddingTop: "5px",
-  width: "100%",
-  fontSize: "1.1em",
-  "&:focus": {
-    outline: "none",
-    borderColor: theme.colors.primary.darker,
-    boxShadow: `0 0 3px ${theme.colors.primary.darker}`,
-  },
-}));
-
-const TextAreaWrapper = styled.textarea(({ theme }) => ({
-  backgroundColor: theme.colors.neutral.white,
-  border: `1px solid ${theme.colors.primary.normal}`,
-  borderRadius: "10px",
-  paddingBottom: "5px",
-  textIndent: "5px",
-  paddingTop: "5px",
-  width: "100%",
-  fontSize: "1.1em",
-  "&:focus": {
-    outline: "none",
-    borderColor: theme.colors.primary.darker,
-    boxShadow: `0 0 3px ${theme.colors.primary.darker}`,
-  },
-}));
-
 const CreatePage = () => {
+  const navigate = useNavigate();
   const createNote = notesStore((state) => state.createNote);
   const theme = useTheme();
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+  const [title, setTitle] = useInput("");
+  const [body, setBody] = useInput("");
   const [archived, setArchived] = useState(false);
   const [formError, setError] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
@@ -116,6 +89,7 @@ const CreatePage = () => {
     } else {
       createNote(title, body, archived);
       setFormSuccess(true);
+      navigate("/");
     }
   };
 
@@ -126,18 +100,10 @@ const CreatePage = () => {
           handleSubmit(e, title, body, archived);
         }}
       >
-        <InputWrapper
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
-          placeholder="Title..."
-        />
-        <TextAreaWrapper
+        <Input value={title} onChange={setTitle} placeholder="Title..." />
+        <TextArea
           value={body}
-          onChange={(e) => {
-            setBody(e.target.value);
-          }}
+          onChange={setBody}
           placeholder="Description..."
           rows="15"
           cols="50"

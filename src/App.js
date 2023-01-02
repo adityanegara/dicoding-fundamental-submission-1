@@ -9,6 +9,7 @@ import Container from "./components/Container";
 import HomePage from "./components/pages/Homepage";
 import CreatePage from "./components/pages/CreatePage";
 import DetailPage from "./components/pages/DetailPage";
+import LoginPage from "./components/pages/LoginPage";
 
 const AppContainer = styled.div({
   paddingBottom: "10vh",
@@ -26,6 +27,7 @@ const App = () => {
             <Route path="/" element={<HomePage/>}/>
             <Route path="/create" element={<CreatePage/>}/>
             <Route path="/detail/:id" element={<DetailPage/>}/>
+            <Route path="/login" element={<LoginPage/>}/>
           </Routes>
         </Container>
         </AppContainer>

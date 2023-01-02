@@ -12,7 +12,7 @@ const HomePage = () => {
   const isArchived = uiStore((state) => state.isArchived);
   const notes = notesStore((state) => state.notes);
   const [inputValue, setInputValue] = useState("");
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const filterSearchInput = (searchInput, notes) => {
     let keyword = searchInput;

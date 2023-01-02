@@ -1,10 +1,14 @@
 import { useState } from "react";
 import styled from "@emotion/styled";
+import { useTheme } from "@emotion/react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import useInput from "../../hooks/useInput";
 import HomeButton from "../HomeButton";
 import Checkbox from "react-custom-checkbox";
 import checklistIcon from "../../assets/checklist.svg";
-import { useTheme } from "@emotion/react";
+import Input from "../Input";
+import TextArea from "../TextArea";
 import notesStore from "../../store/noteStore";
 
 const FormWrapper = styled.form(({ theme }) => ({
@@ -49,47 +53,16 @@ const FormWrapper = styled.form(({ theme }) => ({
   },
 }));
 
-const InputWrapper = styled.input(({ theme }) => ({
-  backgroundColor: theme.colors.neutral.white,
-  border: `1px solid ${theme.colors.primary.normal}`,
-  borderRadius: "10px",
-  paddingBottom: "5px",
-  textIndent: "5px",
-  paddingTop: "5px",
-  width: "100%",
-  fontSize: "1.1em",
-  "&:focus": {
-    outline: "none",
-    borderColor: theme.colors.primary.darker,
-    boxShadow: `0 0 3px ${theme.colors.primary.darker}`,
-  },
-}));
-
-const TextAreaWrapper = styled.textarea(({ theme }) => ({
-  backgroundColor: theme.colors.neutral.white,
-  border: `1px solid ${theme.colors.primary.normal}`,
-  borderRadius: "10px",
-  paddingBottom: "5px",
-  textIndent: "5px",
-  paddingTop: "5px",
-  width: "100%",
-  fontSize: "1.1em",
-  "&:focus": {
-    outline: "none",
-    borderColor: theme.colors.primary.darker,
-    boxShadow: `0 0 3px ${theme.colors.primary.darker}`,
-  },
-}));
-
 const DetailPage = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const note = notesStore((state) => state.notes).filter(
     (note) => note.id == id
   )[0];
   const updateNote = notesStore((state) => state.updateNote);
   const theme = useTheme();
-  const [title, setTitle] = useState(note.title);
-  const [body, setBody] = useState(note.body);
+  const [title, setTitle] = useInput(note.title);
+  const [body, setBody] = useInput(note.body);
   const [archived, setArchived] = useState(note.archived);
   const [formError, setError] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
@@ -110,6 +83,7 @@ const DetailPage = () => {
     } else {
       updateNote({ id, title, body, archived });
       setFormSuccess(true);
+      navigate("/");
     }
   };
 
@@ -132,17 +106,9 @@ const DetailPage = () => {
           handleSubmit(e, id, title, body, archived);
         }}
       >
-        <InputWrapper
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
-          value={title}
-          placeholder="Title..."
-        />
-        <TextAreaWrapper
-          onChange={(e) => {
-            setBody(e.target.value);
-          }}
+        <Input onChange={setTitle} value={title} placeholder="Title..." />
+        <TextArea
+          onChange={setBody}
           value={body}
           placeholder="Description..."
           rows="15"
