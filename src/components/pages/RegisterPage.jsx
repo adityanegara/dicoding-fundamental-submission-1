@@ -3,6 +3,8 @@ import useInput from "../../hooks/useInput";
 import Input from "../Input";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { register } from "../../api/notesAPI.js";
+import loadingIcon from "../../assets/loading.gif";
 
 const RegisterContainer = styled.div(({ theme }) => ({
   marginTop: "5vh",
@@ -60,6 +62,10 @@ const RegisterContainer = styled.div(({ theme }) => ({
       width: "80%",
     },
   },
+  ".loading-icon": {
+    width: "40px",
+    height: "40px",
+  },
 }));
 
 const RegisterPage = () => {
@@ -69,6 +75,7 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useInput("");
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const isFormEmpty = ({ name, email, password, confirmPassword }) => {
     if (
@@ -101,15 +108,30 @@ const RegisterPage = () => {
     return error ? <p>{errorText}</p> : null;
   };
 
-  const handleSubmit = (e, { name, email, password, confirmPassword }) => {
+  const handleSubmit = async (
+    e,
+    { name, email, password, confirmPassword }
+  ) => {
     e.preventDefault();
     if (isFormEmpty({ name, email, password, confirmPassword })) {
-    } else {
-      if (isPasswordAndConfirmPasswordSame(password, confirmPassword)) {
+    } else if (!isPasswordAndConfirmPasswordSame(password, confirmPassword)) {
+      setIsLoading(true);
+      const { error, message } = await register({ name, email, password });
+      if (error) {
+        setError(true);
+        setErrorText(message);
       }
-      console.log(email);
-      console.log(password);
+      console.log(message);
+      setIsLoading(false);
     }
+  };
+
+  const renderButtonText = (isLoading) => {
+    return isLoading ? (
+      <img src={loadingIcon} className="loading-icon" alt="loading icon" />
+    ) : (
+      "Register"
+    );
   };
 
   return (
@@ -139,7 +161,7 @@ const RegisterPage = () => {
           onChange={setConfirmPassword}
           placeholder="Confirm Password"
         />
-        <button>Register</button>
+        <button>{renderButtonText(isLoading)}</button>
         {renderErrorText(error)}
       </form>
       <div className="link-wrapper">
