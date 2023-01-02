@@ -106,7 +106,7 @@ const DetailPage = () => {
           handleSubmit(e, id, title, body, archived);
         }}
       >
-        <Input onChange={setTitle} value={title} placeholder="Title..." />
+        <Input type="text" onChange={setTitle} value={title} placeholder="Title..." />
         <TextArea
           onChange={setBody}
           value={body}

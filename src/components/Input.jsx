@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import PropTypes from "prop-types";
 
 const InputWrapper = styled.input(({ theme }) => ({
   backgroundColor: theme.colors.neutral.white,
@@ -16,10 +17,22 @@ const InputWrapper = styled.input(({ theme }) => ({
   },
 }));
 
-const Input = ({ value, onChange, placeholder }) => {
+const Input = ({ value, onChange, placeholder, type }) => {
   return (
-    <InputWrapper value={value} onChange={onChange} placeholder={placeholder} />
+    <InputWrapper
+      type={type}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+    />
   );
+};
+
+Input.defaultProps = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
+  type: PropTypes.string,
 };
 
 export default Input;

@@ -100,7 +100,7 @@ const CreatePage = () => {
           handleSubmit(e, title, body, archived);
         }}
       >
-        <Input value={title} onChange={setTitle} placeholder="Title..." />
+        <Input type="text" value={title} onChange={setTitle} placeholder="Title..." />
         <TextArea
           value={body}
           onChange={setBody}
