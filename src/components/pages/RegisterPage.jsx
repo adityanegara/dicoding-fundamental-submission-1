@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
 import useInput from "../../hooks/useInput";
 import Input from "../Input";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { register } from "../../api/notesAPI.js";
 import loadingIcon from "../../assets/loading.gif";
@@ -52,9 +53,14 @@ const RegisterContainer = styled.div(({ theme }) => ({
     "button:hover": {
       backgroundColor: theme.colors.primary.darker,
     },
+    ".error-message": {
+      color: theme.colors.neutral.red,
+    },
+    ".success-message": {
+      color: theme.colors.neutral.green,
+    },
     p: {
       textAlign: "center",
-      color: theme.colors.neutral.red,
     },
   },
   [`@media only screen and (min-width: ${theme.layout.desktop})`]: {
@@ -69,6 +75,7 @@ const RegisterContainer = styled.div(({ theme }) => ({
 }));
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const [name, setName] = useInput("");
   const [email, setEmail] = useInput("");
   const [password, setPassword] = useInput("");
@@ -76,6 +83,8 @@ const RegisterPage = () => {
   const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [successText, setSuccesText] = useState("");
 
   const isFormEmpty = ({ name, email, password, confirmPassword }) => {
     if (
@@ -104,8 +113,12 @@ const RegisterPage = () => {
     return false;
   };
 
-  const renderErrorText = (error) => {
-    return error ? <p>{errorText}</p> : null;
+  const renderErrorText = (error, errorText) => {
+    return error ? <p className="error-message">{errorText}</p> : null;
+  };
+
+  const renderSuccessText = (success, successText) => {
+    return success ? <p className="success-message">{successText}</p> : null;
   };
 
   const handleSubmit = async (
@@ -120,8 +133,13 @@ const RegisterPage = () => {
       if (error) {
         setError(true);
         setErrorText(message);
+      } else {
+        setSuccess(true);
+        setSuccesText(message);
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
       }
-      console.log(message);
       setIsLoading(false);
     }
   };
@@ -162,7 +180,8 @@ const RegisterPage = () => {
           placeholder="Confirm Password"
         />
         <button>{renderButtonText(isLoading)}</button>
-        {renderErrorText(error)}
+        {renderErrorText(error, errorText)}
+        {renderSuccessText(success, successText)}
       </form>
       <div className="link-wrapper">
         <Link to={`/login`} className="register-link">
