@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
+import PropTypes from "prop-types";
 import useInput from "../../hooks/useInput";
 import Input from "../Input";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { login } from "../../api/notesAPI.js";
-import { useNavigate } from "react-router-dom";
 import loadingIcon from "../../assets/loading.gif";
 
 const LoginContainer = styled.div(({ theme }) => ({
@@ -73,8 +73,7 @@ const LoginContainer = styled.div(({ theme }) => ({
   },
 }));
 
-const LoginPage = () => {
-  const navigate = useNavigate();
+const LoginPage = ({ loginSuccess }) => {
   const [email, setEmail] = useInput("");
   const [password, setPassword] = useInput("");
   const [isLoading, setIsLoading] = useState(false);
@@ -121,9 +120,7 @@ const LoginPage = () => {
       } else {
         setSuccess(true);
         setSuccesText(message);
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
+        loginSuccess(data);
       }
       setIsLoading(false);
     }
@@ -160,6 +157,10 @@ const LoginPage = () => {
       </div>
     </LoginContainer>
   );
+};
+
+LoginPage.defaultProps = {
+  loginSuccess: PropTypes.func.isRequired,
 };
 
 export default LoginPage;
