@@ -1,8 +1,7 @@
 import styled from "@emotion/styled";
-import { useNavigate } from "react-router-dom";
 import useInput from "../../hooks/useInput";
 import Input from "../Input";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { register } from "../../api/notesAPI.js";
 import loadingIcon from "../../assets/loading.gif";
@@ -46,7 +45,6 @@ const RegisterContainer = styled.div(({ theme }) => ({
       backgroundColor: theme.colors.primary.normal,
       borderRadius: "5px",
       cursor: "pointer",
-      width: "100%",
       fontSize: "1.1em",
       transition: "ease-in 0.2s",
     },

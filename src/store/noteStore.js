@@ -39,7 +39,6 @@ const notesStore = create((set) => ({
             isEdited: true,
           };
         } else {
-          console.log("dont found note");
           return note;
         }
       }),
