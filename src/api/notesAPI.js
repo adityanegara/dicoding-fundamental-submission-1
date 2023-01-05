@@ -132,3 +132,19 @@ export const createNote = async ({ title, body }) => {
     message: responseJson.message,
   };
 };
+
+export const getDetailNote = async (id) =>{
+  const response = await fetchWithToken(`${BASE_URL}/notes/${id}`);
+  const responseJson = await response.json();
+  if(responseJson.status !== "success"){
+    return {
+      error: true,
+      message: responseJson.message
+    }
+  }
+  return {
+    error: false,
+    message: responseJson.message,
+    note: responseJson.data
+  }
+}

@@ -1,141 +1,77 @@
-import { useState } from "react";
-import styled from "@emotion/styled";
-import { useTheme } from "@emotion/react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import useInput from "../../hooks/useInput";
+import styled from "@emotion/styled";
 import HomeButton from "../HomeButton";
-import Checkbox from "react-custom-checkbox";
-import checklistIcon from "../../assets/checklist.svg";
-import Input from "../Input";
-import TextArea from "../TextArea";
-import notesStore from "../../store/noteStore";
+import { getDetailNote } from "../../api/notesAPI";
+import loadingIcon from "../../assets/loading.gif";
 
-const FormWrapper = styled.form(({ theme }) => ({
+const Middle = styled.div({
   marginTop: "3vh",
-  width: "100%",
-  marginLeft: "auto",
-  marginRight: "auto",
   display: "flex",
-  flexDirection: "column",
-  gap: "15px",
-  alignItems: "flex-start",
-  button: {
-    width: "100%",
-    border: `1px solid ${theme.colors.neutral.gray}`,
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontSize: "1.1em",
-    transition: "ease-in 0.2s",
-  },
-  ".edit-button": {
-    color: theme.colors.neutral.white,
-    backgroundColor: theme.colors.primary.normal,
-  },
-  ".edit-button:hover": {
-    backgroundColor: theme.colors.primary.darker,
-  },
+  justifyContent: "center",
   img: {
-    width: "15px",
-    height: "15px",
-    filter:
-      "invert(74%) sepia(36%) saturate(6736%) hue-rotate(178deg) brightness(101%) contrast(101%)",
+    width: "100px",
+    height: "100px",
   },
-  p: {
-    width: "100%",
-    textAlign: "center",
-  },
-  ".error-text": {
-    color: theme.colors.neutral.red,
-  },
-  ".success-text": {
-    color: theme.colors.neutral.green,
-  },
-}));
+});
+
+const ErrorText = styled.p(({theme})=>({
+  color: theme.colors.neutral.red,
+}))
 
 const DetailPage = () => {
+  const [initializing, setInitializing] = useState(false);
+  const [note, setNote] = useState(null);
+  const [initializingError, setInitializingError] = useState(false);
+  const [initializingErrorText, setInitializingErrorText] = useState("");
+
   const navigate = useNavigate();
   const { id } = useParams();
-  const note = notesStore((state) => state.notes).filter(
-    (note) => note.id == id
-  )[0];
-  const updateNote = notesStore((state) => state.updateNote);
-  const theme = useTheme();
-  const [title, setTitle] = useInput(note.title);
-  const [body, setBody] = useInput(note.body);
-  const [archived, setArchived] = useState(note.archived);
-  const [formError, setError] = useState(false);
-  const [formSuccess, setFormSuccess] = useState(false);
 
-  const isFormError = (title, body) => {
-    if (title === "" || body === "") {
-      setError(true);
-      setFormSuccess(false);
-      return true;
+  useEffect(() => {
+    const fetchDetailNote = async (id) => {
+      setInitializing(true);
+      const { note, error, message } = await getDetailNote(id);
+      if (error) {
+        setInitializingError(true);
+        setInitializingErrorText(message);
+      } else {
+        setNote(note);
+      }
+      setInitializing(false);
+    };
+    fetchDetailNote(id);
+  }, []);
+
+  const renderLoading = (
+    initializing,
+    initializingError,
+    initializingErrorText
+  ) => {
+    if (initializing) {
+      return (
+        <Middle>
+          <img src={loadingIcon} alt="loading icon" />
+        </Middle>
+      );
+    } else if (initializingError) {
+      return (
+        <Middle>
+          <ErrorText>{initializingErrorText}</ErrorText>
+        </Middle>
+      );
     }
-    setError(false);
-    return false;
-  };
-
-  const handleSubmit = (event, id, title, body, archived) => {
-    event.preventDefault();
-    if (isFormError(title, body)) {
-    } else {
-      updateNote({ id, title, body, archived });
-      setFormSuccess(true);
-      navigate("/");
-    }
-  };
-
-  const renderErrorText = (formError) => {
-    return formError ? (
-      <p className="error-text">Please fill all the input!</p>
-    ) : null;
-  };
-
-  const renderSuccessText = (formSuccess) => {
-    return formSuccess ? (
-      <p className="success-text">Successfully edit note!</p>
+    return initializing ? (
+      <Middle>
+        <img src={loadingIcon} alt="loading icon" />
+      </Middle>
     ) : null;
   };
 
   return (
     <>
-      <FormWrapper
-        onSubmit={(e) => {
-          handleSubmit(e, id, title, body, archived);
-        }}
-      >
-        <Input type="text" onChange={setTitle} value={title} placeholder="Title..." />
-        <TextArea
-          onChange={setBody}
-          value={body}
-          placeholder="Description..."
-          rows="15"
-          cols="50"
-        />
-        <Checkbox
-          icon={
-            <img
-              src={checklistIcon}
-              alt="checklist-icon"
-              className="checklist"
-            />
-          }
-          onChange={() => {
-            setArchived(!archived);
-          }}
-          checked={archived}
-          borderColor={theme.colors.primary.normal}
-          style={{ backgroundColor: theme.colors.neutral.white }}
-          label="Archived"
-        />
-        <button type="submit" className="edit-button">
-          Edit
-        </button>
-        {renderErrorText(formError)}
-        {renderSuccessText(formSuccess)}
-      </FormWrapper>
+      {renderLoading(initializing,initializingError,initializingErrorText)}
       <HomeButton />
     </>
   );
