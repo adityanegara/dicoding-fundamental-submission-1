@@ -73,3 +73,20 @@ export const getUserLogged = async () => {
   }
   return { error: false, data: responseJson.data };
 };
+
+export const getNotes = async () => {
+  const response = await fetchWithToken(`${BASE_URL}/notes`);
+  const responseJson = await response.json();
+  if (responseJson.status !== "success") {
+    return {
+      error: true,
+      data: [],
+      message: responseJson.message,
+    };
+  }
+  return {
+    error: false,
+    data: responseJson.data,
+    message: responseJson.message,
+  };
+};
