@@ -2,7 +2,8 @@ import PropTypes from "prop-types";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import elipsisOnText from "../helpers/elipsisOnText";
-import notesStore from "../store/noteStore";
+import moment from "moment";
+import { archiveNote } from "../api/notesAPI";
 
 const NoteWrapper = styled.div(({ theme }) => ({
   backgroundColor: theme.colors.neutral.white,
@@ -44,39 +45,41 @@ const NoteWrapper = styled.div(({ theme }) => ({
     ".detail-button:hover": {
       backgroundColor: theme.colors.primary.darker,
     },
-    ".delete-button": {
+    ".archieve-button": {
       color: theme.colors.primary.normal,
       backgroundColor: theme.colors.neutral.white,
     },
-    ".delete-button:hover": {
+    ".archieve-button:hover": {
       backgroundColor: theme.colors.neutral.gray,
     },
   },
 }));
 
-const renderCreatedAt = (isEdited, createdAt) => {
-  return `${isEdited ? "Edited" : "Created"} at ${createdAt}`;
+const handleArchhivebuttonClicked = async (id) => {
+  const { message, status } = await archiveNote(id);
 };
 
-const Note = ({ id, title, body, isEdited, createdAt }) => {
-  const deleteNote = notesStore((state) => state.deleteNote);
+const Note = ({ id, title, body, createdAt }) => {
   return (
     <NoteWrapper>
       <div className="note-content">
         <h3>{elipsisOnText(title, 20)}</h3>
         <p>{elipsisOnText(body, 70)}</p>
-        <small>{renderCreatedAt(isEdited, createdAt)}</small>
+        <small>
+          Created at
+          {` ${moment(createdAt).format("MMMM Do YYYY, h:mm:ss a")}`}
+        </small>
         <div className="button-group">
           <Link to={`/detail/${id}`} className="detail-button">
             Detail
           </Link>
           <button
-            className="delete-button"
+            className="archieve-button"
             onClick={() => {
-              deleteNote(id);
+              handleArchhivebuttonClicked(id);
             }}
           >
-            Delete
+            Archieve
           </button>
         </div>
       </div>
@@ -88,7 +91,6 @@ Note.defaultProps = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
-  isEdited: PropTypes.bool.isRequired,
   createdAt: PropTypes.string.isRequired,
 };
 
