@@ -55,11 +55,12 @@ const NoteWrapper = styled.div(({ theme }) => ({
   },
 }));
 
-const handleArchhivebuttonClicked = async (id) => {
-  const { message, status } = await archiveNote(id);
-};
+const Note = ({ id, title, body, createdAt, handleArchiveOrUnarchive }) => {
+  const handleArchhivebuttonClicked = async (id) => {
+    const { message, error } = await archiveNote(id);
+    handleArchiveOrUnarchive();
+  };
 
-const Note = ({ id, title, body, createdAt }) => {
   return (
     <NoteWrapper>
       <div className="note-content">
@@ -92,6 +93,7 @@ Note.defaultProps = {
   title: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
+  handleArchiveOrUnarchive: PropTypes.func.isRequired,
 };
 
 export default Note;

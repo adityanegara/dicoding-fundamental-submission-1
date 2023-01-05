@@ -51,20 +51,23 @@ const HomePage = () => {
   const [notes, setNotes] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [searchParams] = useSearchParams();
-  const [initializing, setInitializing] = useState(true);
+  const [initializing, setInitializing] = useState(false);
   const [errorText, setErrorText] = useState("");
 
+  const fetchNotes = async () => {
+    setInitializing(true);
+    const { data, message, error } = await getNotes();
+    setNotes(data);
+    setInitializing(false);
+    if (error) {
+      setErrorText(message);
+    }
+  };
+
   useEffect(() => {
-    const fetchNotes = async () => {
-      const { data, message, error } = await getNotes();
-      setNotes(data);
-      setInitializing(false);
-      if (error) {
-        setErrorText(message);
-      }
-    };
     fetchNotes();
   }, []);
+
 
   const filterSearchInput = (searchInput, notes) => {
     let keyword = searchInput;
@@ -94,6 +97,7 @@ const HomePage = () => {
         body={note.body}
         isEdited={note.isEdited}
         createdAt={note.createdAt}
+        handleArchiveOrUnarchive={fetchNotes}
       />
     ));
   };

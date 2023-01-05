@@ -91,11 +91,17 @@ export const getNotes = async () => {
   };
 };
 
-export const archiveNote = async (id) =>{
-  const response = await fetchWithToken(`${BASE_URL}/${id}/archive`);
+export const archiveNote = async (id) => {
+  const response = await fetchWithToken(`${BASE_URL}/notes/${id}/archive`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+  });
   const responseJson = await response.json();
   if (responseJson.status !== "success") {
     return {
+      status: responseJson.status,
       error: true,
       message: responseJson.message,
     };
@@ -104,4 +110,4 @@ export const archiveNote = async (id) =>{
     error: false,
     message: responseJson.message,
   };
-}
+};

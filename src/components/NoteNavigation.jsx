@@ -35,7 +35,7 @@ const NoteNavigation = () => {
   return (
     <NoteNavigationWrapper>
       <button onClick={toggleAll} className={!isArchived ? "active" : ""}>
-        All
+        Unarchived
       </button>
       <button onClick={toggleArchived} className={isArchived ? "active" : ""}>
         Archived
