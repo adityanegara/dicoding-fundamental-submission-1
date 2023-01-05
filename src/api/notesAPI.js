@@ -111,3 +111,24 @@ export const archiveNote = async (id) => {
     message: responseJson.message,
   };
 };
+
+export const createNote = async ({ title, body }) => {
+  const response = await fetchWithToken(`${BASE_URL}/notes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title, body }),
+  });
+  const responseJson = await response.json();
+  if (responseJson.status !== "success") {
+    return {
+      error: true,
+      message: responseJson.message,
+    };
+  }
+  return {
+    error: false,
+    message: responseJson.message,
+  };
+};

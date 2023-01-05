@@ -1,14 +1,12 @@
 import { useState } from "react";
-import { useTheme } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 import useInput from "../../hooks/useInput";
 import styled from "@emotion/styled";
-import Checkbox from "react-custom-checkbox";
 import HomeButton from "../HomeButton";
-import checklistIcon from "../../assets/checklist.svg";
-import notesStore from "../../store/noteStore";
 import Input from "../Input";
 import TextArea from "../TextArea";
+import loadingIcon from "../../assets/loading.gif";
+import { createNote } from "../../api/notesAPI";
 
 const FormWrapper = styled.form(({ theme }) => ({
   marginTop: "3vh",
@@ -26,7 +24,6 @@ const FormWrapper = styled.form(({ theme }) => ({
     backgroundColor: theme.colors.primary.normal,
     borderRadius: "5px",
     cursor: "pointer",
-    width: "100%",
     fontSize: "1.1em",
     transition: "ease-in 0.2s",
   },
@@ -49,47 +46,66 @@ const FormWrapper = styled.form(({ theme }) => ({
   ".success-text": {
     color: theme.colors.neutral.green,
   },
+  ".loading-icon": {
+    width: "40px",
+    height: "40px",
+  },
 }));
 
 const CreatePage = () => {
   const navigate = useNavigate();
-  const createNote = notesStore((state) => state.createNote);
-  const theme = useTheme();
   const [title, setTitle] = useInput("");
   const [body, setBody] = useInput("");
-  const [archived, setArchived] = useState(false);
-  const [formError, setError] = useState(false);
+  const [formError, setFormError] = useState(false);
+  const [errorText, setErrorText] = useState("");
   const [formSuccess, setFormSuccess] = useState(false);
+  const [successText, setSuccessText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const isFormError = (title, body) => {
     if (title === "" || body === "") {
-      setError(true);
+      setFormError(true);
+      setErrorText("Please fill all the inputs!");
       setFormSuccess(false);
       return true;
     }
-    setError(false);
+    setFormError(false);
     return false;
   };
 
-  const renderErrorText = (formError) => {
-    return formError ? (
-      <p className="error-text">Please fill all the input!</p>
-    ) : null;
+  const renderErrorText = (formError, errorText) => {
+    return formError ? <p className="error-text">{errorText}</p> : null;
   };
 
-  const renderSuccessText = (formSuccess) => {
-    return formSuccess ? (
-      <p className="success-text">Successfully add note!</p>
-    ) : null;
+  const renderButtonText = (isLoading) => {
+    return isLoading ? (
+      <img src={loadingIcon} className="loading-icon" alt="loading icon" />
+    ) : (
+      "Create"
+    );
   };
 
-  const handleSubmit = (event, title, body, archived) => {
+  const renderSuccessText = (formSuccess, successText) => {
+    return formSuccess ? <p className="success-text">{successText}</p> : null;
+  };
+
+  const handleSubmit = async (event, title, body) => {
     event.preventDefault();
     if (isFormError(title, body)) {
     } else {
-      createNote(title, body, archived);
-      setFormSuccess(true);
-      navigate("/");
+      setIsLoading(true);
+      const { error, message } = await createNote({ title, body });
+      setIsLoading(false);
+      if (error) {
+        setFormError(true);
+        setErrorText(message);
+      } else {
+        setFormSuccess(true);
+        setSuccessText(message);
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      }
     }
   };
 
@@ -97,10 +113,15 @@ const CreatePage = () => {
     <>
       <FormWrapper
         onSubmit={(e) => {
-          handleSubmit(e, title, body, archived);
+          handleSubmit(e, title, body);
         }}
       >
-        <Input type="text" value={title} onChange={setTitle} placeholder="Title..." />
+        <Input
+          type="text"
+          value={title}
+          onChange={setTitle}
+          placeholder="Title..."
+        />
         <TextArea
           value={body}
           onChange={setBody}
@@ -108,25 +129,9 @@ const CreatePage = () => {
           rows="15"
           cols="50"
         />
-        <Checkbox
-          icon={
-            <img
-              src={checklistIcon}
-              alt="checklist-icon"
-              className="checklist"
-            />
-          }
-          onChange={() => {
-            setArchived(!archived);
-          }}
-          checked={archived}
-          borderColor={theme.colors.primary.normal}
-          style={{ backgroundColor: theme.colors.neutral.white }}
-          label="Archived"
-        />
-        <button type="submit">Create</button>
-        {renderErrorText(formError)}
-        {renderSuccessText(formSuccess)}
+        <button type="submit">{renderButtonText(isLoading)}</button>
+        {renderErrorText(formError, errorText)}
+        {renderSuccessText(formSuccess, successText)}
       </FormWrapper>
       <HomeButton />
     </>
