@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext} from "react";
 import styled from "@emotion/styled";
 import CreateButton from "../CreateButtton";
 import SearchInput from "../SearchInput";
@@ -8,6 +8,7 @@ import uiStore from "../../store/uiStore";
 import { useSearchParams } from "react-router-dom";
 import { getUnarchivedNotes, getArchivedNotes } from "../../api/notesAPI";
 import loadingIcon from "../../assets/loading.gif";
+import ThemeContext from "../../contexts/ThemeContext"
 
 const LoadingWrapper = styled.div({
   display: "flex",
@@ -47,6 +48,7 @@ const ErrorNote = styled.p(({ theme }) => ({
 }));
 
 const HomePage = () => {
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const isArchived = uiStore((state) => state.isArchived);
   const [notes, setNotes] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -132,6 +134,7 @@ const HomePage = () => {
           </NoteContainer>
           {renderEmptyText(notes)}
           <CreateButton />
+          <button onClick={toggleTheme}>Toggle Theme : {theme}</button>
         </>
       );
     }

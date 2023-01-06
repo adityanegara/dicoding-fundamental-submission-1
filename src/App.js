@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "@emotion/styled";
 import { Global } from "@emotion/react";
 import { ThemeProvider } from "@emotion/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import theme from "./theme/styledTheme";
+import styledTheme from "./theme/styledTheme";
 import global from "./theme/global";
 import Navbar from "./components/Navbar";
 import Container from "./components/Container";
@@ -14,6 +14,7 @@ import LoginPage from "./components/pages/LoginPage";
 import RegisterPage from "./components/pages/RegisterPage";
 import { putAccessToken } from "./api/notesAPI";
 import { getUserLogged } from "./api/notesAPI";
+import ThemeContext from "./contexts/ThemeContext";
 
 const AppContainer = styled.div({
   paddingBottom: "10vh",
@@ -22,6 +23,11 @@ const AppContainer = styled.div({
 const App = () => {
   const [authedUser, setAuthedUser] = useState(null);
   const [initializing, setInitializing] = useState(true);
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme")
+      ? localStorage.getItem("theme")
+      : "light";
+  });
 
   useEffect(() => {
     const fetchUserLogged = async () => {
@@ -31,6 +37,21 @@ const App = () => {
     };
     fetchUserLogged();
   }, []);
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => {
+      const newTheme = (prevTheme === "light") ? "dark" : "light";
+      localStorage.setItem("theme", newTheme);
+      return newTheme;
+    });
+  };
+
+  const themeContextValue = useMemo(() => {
+    return {
+      theme,
+      toggleTheme,
+    };
+  }, [theme]);
 
   const onLoginSuccess = async ({ accessToken }) => {
     putAccessToken(accessToken);
@@ -64,15 +85,18 @@ const App = () => {
   if (initializing) {
     return null;
   }
+
   return (
     <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <Global styles={global} />
-        <AppContainer>
-          <Navbar title="Note" authedUser={authedUser} logout={onLogout} />
-          <Container>{renderRoutes(authedUser)}</Container>
-        </AppContainer>
-      </ThemeProvider>
+      <ThemeContext.Provider value={themeContextValue}>
+        <ThemeProvider theme={styledTheme}>
+          <Global styles={global} />
+          <AppContainer>
+            <Navbar title="Note" authedUser={authedUser} logout={onLogout} />
+            <Container>{renderRoutes(authedUser)}</Container>
+          </AppContainer>
+        </ThemeProvider>
+      </ThemeContext.Provider>
     </BrowserRouter>
   );
 };
