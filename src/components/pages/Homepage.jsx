@@ -48,7 +48,6 @@ const ErrorNote = styled.p(({ theme }) => ({
 }));
 
 const HomePage = () => {
-  const { theme, toggleTheme } = useContext(ThemeContext);
   const isArchived = uiStore((state) => state.isArchived);
   const [notes, setNotes] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -134,7 +133,6 @@ const HomePage = () => {
           </NoteContainer>
           {renderEmptyText(notes)}
           <CreateButton />
-          <button onClick={toggleTheme}>Toggle Theme : {theme}</button>
         </>
       );
     }

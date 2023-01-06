@@ -4,7 +4,7 @@ import { Global } from "@emotion/react";
 import { ThemeProvider } from "@emotion/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styledTheme from "./theme/styledTheme";
-import global from "./theme/global";
+import { globalLight, globalDark } from "./theme/global";
 import Navbar from "./components/Navbar";
 import Container from "./components/Container";
 import HomePage from "./components/pages/Homepage";
@@ -40,7 +40,7 @@ const App = () => {
 
   const toggleTheme = () => {
     setTheme((prevTheme) => {
-      const newTheme = (prevTheme === "light") ? "dark" : "light";
+      const newTheme = prevTheme === "light" ? "dark" : "light";
       localStorage.setItem("theme", newTheme);
       return newTheme;
     });
@@ -90,7 +90,11 @@ const App = () => {
     <BrowserRouter>
       <ThemeContext.Provider value={themeContextValue}>
         <ThemeProvider theme={styledTheme}>
-          <Global styles={global} />
+          <Global
+            styles={() => {
+              return theme === "light" ? globalLight : globalDark;
+            }}
+          />
           <AppContainer>
             <Navbar title="Note" authedUser={authedUser} logout={onLogout} />
             <Container>{renderRoutes(authedUser)}</Container>

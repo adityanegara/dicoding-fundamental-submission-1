@@ -1,8 +1,9 @@
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext} from "react";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import searchIcon from "../assets/search.svg";
+import ThemeContext from "../contexts/ThemeContext";
 
 const SearchInputWrapper = styled.div(({ theme }) => ({
   display: "flex",
@@ -32,8 +33,9 @@ const SearchInputWrapper = styled.div(({ theme }) => ({
   },
 }));
 
-const InputWrapper = styled.input(({ theme }) => ({
-  backgroundColor: theme.colors.neutral.white,
+const InputWrapper = styled.input(({ theme, isDarkTheme}) => ({
+  backgroundColor:  (isDarkTheme === "light") ? theme.colors.neutral.white : theme.colors.neutral.lightBlack,
+  color: (isDarkTheme === "light") ? theme.colors.neutral.black : theme.colors.neutral.white,
   border: `1px solid ${theme.colors.primary.normal}`,
   borderRadius: "10px",
   paddingLeft: "5px",
@@ -45,6 +47,7 @@ const InputWrapper = styled.input(({ theme }) => ({
   marginRight: "auto",
   marginTop: "3vh",
   fontSize: "1.1em",
+  transition: "ease-in 0.2s",
   "&:focus": {
     outline: "none",
     borderColor: theme.colors.primary.darker,
@@ -55,6 +58,7 @@ const InputWrapper = styled.input(({ theme }) => ({
 const SearchInput = ({ placeHolder }) => {
   const [input, setInput] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
+  const { theme } = useContext(ThemeContext);
   return (
     <SearchInputWrapper>
       <InputWrapper
@@ -63,6 +67,7 @@ const SearchInput = ({ placeHolder }) => {
           setInput(e.target.value);
         }}
         placeholder={placeHolder}
+        isDarkTheme={theme}
       />
       <button
         onClick={() => {
