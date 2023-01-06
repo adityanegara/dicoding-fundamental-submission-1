@@ -3,7 +3,8 @@ import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import elipsisOnText from "../helpers/elipsisOnText";
 import moment from "moment";
-import { archiveNote } from "../api/notesAPI";
+import uiStore from "../store/uiStore";
+import { archiveNote, unarchiveNote } from "../api/notesAPI";
 
 const NoteWrapper = styled.div(({ theme }) => ({
   backgroundColor: theme.colors.neutral.white,
@@ -55,10 +56,27 @@ const NoteWrapper = styled.div(({ theme }) => ({
   },
 }));
 
-const Note = ({ id, title, body, createdAt, handleArchiveOrUnarchive }) => {
+const Note = ({
+  id,
+  title,
+  body,
+  createdAt,
+  archived,
+  handleArchiveOrUnarchive,
+}) => {
+  const isArchived = uiStore((state) => state.isArchived);
+
   const handleArchhivebuttonClicked = async (id) => {
-    const { message, error } = await archiveNote(id);
+    if (isArchived) {
+      await unarchiveNote(id);
+    } else {
+      await archiveNote(id);
+    }
     handleArchiveOrUnarchive();
+  };
+
+  const renderArchiveButtonText = (archieved) => {
+    return archieved ? "Unarchive" : "Archive";
   };
 
   return (
@@ -80,7 +98,7 @@ const Note = ({ id, title, body, createdAt, handleArchiveOrUnarchive }) => {
               handleArchhivebuttonClicked(id);
             }}
           >
-            Archieve
+            {renderArchiveButtonText(archived)}
           </button>
         </div>
       </div>
@@ -93,6 +111,7 @@ Note.defaultProps = {
   title: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
+  archived: PropTypes.bool.isRequired,
   handleArchiveOrUnarchive: PropTypes.func.isRequired,
 };
 

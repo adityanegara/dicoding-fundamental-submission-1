@@ -6,7 +6,7 @@ import NoteNavigation from "../NoteNavigation";
 import Note from "../Note";
 import uiStore from "../../store/uiStore";
 import { useSearchParams } from "react-router-dom";
-import { getNotes } from "../../api/notesAPI";
+import { getUnarchivedNotes, getArchivedNotes } from "../../api/notesAPI";
 import loadingIcon from "../../assets/loading.gif";
 
 const LoadingWrapper = styled.div({
@@ -56,7 +56,9 @@ const HomePage = () => {
 
   const fetchNotes = async () => {
     setInitializing(true);
-    const { data, message, error } = await getNotes();
+    const { data, message, error } = isArchived
+      ? await getArchivedNotes()
+      : await getUnarchivedNotes();
     setNotes(data);
     setInitializing(false);
     if (error) {
@@ -66,8 +68,7 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchNotes();
-  }, []);
-
+  }, [isArchived]);
 
   const filterSearchInput = (searchInput, notes) => {
     let keyword = searchInput;
@@ -95,7 +96,7 @@ const HomePage = () => {
         id={note.id}
         title={note.title}
         body={note.body}
-        isEdited={note.isEdited}
+        archived={note.archived}
         createdAt={note.createdAt}
         handleArchiveOrUnarchive={fetchNotes}
       />

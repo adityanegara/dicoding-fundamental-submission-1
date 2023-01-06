@@ -74,8 +74,25 @@ export const getUserLogged = async () => {
   return { error: false, data: responseJson.data };
 };
 
-export const getNotes = async () => {
+export const getUnarchivedNotes = async () => {
   const response = await fetchWithToken(`${BASE_URL}/notes`);
+  const responseJson = await response.json();
+  if (responseJson.status !== "success") {
+    return {
+      error: true,
+      data: [],
+      message: responseJson.message,
+    };
+  }
+  return {
+    error: false,
+    data: responseJson.data,
+    message: responseJson.message,
+  };
+};
+
+export const getArchivedNotes = async () => {
+  const response = await fetchWithToken(`${BASE_URL}/notes/archived`);
   const responseJson = await response.json();
   if (responseJson.status !== "success") {
     return {
@@ -93,6 +110,27 @@ export const getNotes = async () => {
 
 export const archiveNote = async (id) => {
   const response = await fetchWithToken(`${BASE_URL}/notes/${id}/archive`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+  });
+  const responseJson = await response.json();
+  if (responseJson.status !== "success") {
+    return {
+      status: responseJson.status,
+      error: true,
+      message: responseJson.message,
+    };
+  }
+  return {
+    error: false,
+    message: responseJson.message,
+  };
+};
+
+export const unarchiveNote = async (id) => {
+  const response = await fetchWithToken(`${BASE_URL}/notes/${id}/unarchive`, {
     method: "POST",
     headers: {
       "Content-type": "application/json",
