@@ -16,9 +16,28 @@ const Middle = styled.div({
   },
 });
 
-const ErrorText = styled.p(({theme})=>({
+const ErrorText = styled.p(({ theme }) => ({
   color: theme.colors.neutral.red,
-}))
+}));
+
+const DetailPageContainer = styled.div(({ theme }) => ({
+  marginTop: "5vh",
+  paddingBottom: "5vh",
+  backgroundColor: theme.colors.neutral.white,
+  border: `1px solid ${theme.colors.neutral.darkGray}`,
+  borderRadius: "5px",
+  h3:{
+    textAlign: "center",
+    fontSize: "1.5em"
+  },
+  p:{
+    lineHeight: "30px",
+    textIndent: "50px",
+    width: "90%",
+    marginLeft: "auto",
+    marginRight: "auto"
+  }
+}));
 
 const DetailPage = () => {
   const [initializing, setInitializing] = useState(false);
@@ -42,7 +61,7 @@ const DetailPage = () => {
       setInitializing(false);
     };
     fetchDetailNote(id);
-  }, []);
+  }, [id]);
 
   const renderLoading = (
     initializing,
@@ -61,17 +80,20 @@ const DetailPage = () => {
           <ErrorText>{initializingErrorText}</ErrorText>
         </Middle>
       );
+    } else if (note !== null) {
+      return (
+        <DetailPageContainer>
+          <h3>{note.title}</h3>
+          <p>{note.body}</p>
+        </DetailPageContainer>
+      );
     }
-    return initializing ? (
-      <Middle>
-        <img src={loadingIcon} alt="loading icon" />
-      </Middle>
-    ) : null;
+    return null;
   };
 
   return (
     <>
-      {renderLoading(initializing,initializingError,initializingErrorText)}
+      {renderLoading(initializing, initializingError, initializingErrorText)}
       <HomeButton />
     </>
   );
