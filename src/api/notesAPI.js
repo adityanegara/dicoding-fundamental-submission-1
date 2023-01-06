@@ -133,18 +133,38 @@ export const createNote = async ({ title, body }) => {
   };
 };
 
-export const getDetailNote = async (id) =>{
+export const getDetailNote = async (id) => {
   const response = await fetchWithToken(`${BASE_URL}/notes/${id}`);
   const responseJson = await response.json();
-  if(responseJson.status !== "success"){
+  if (responseJson.status !== "success") {
     return {
       error: true,
-      message: responseJson.message
-    }
+      message: responseJson.message,
+    };
   }
   return {
     error: false,
     message: responseJson.message,
-    note: responseJson.data
+    note: responseJson.data,
+  };
+};
+
+export const deleteNote = async (id) => {
+  const response = await fetchWithToken(`${BASE_URL}/notes/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const responseJson = await response.json();
+  if (responseJson.status !== "success") {
+    return {
+      error: true,
+      message: responseJson.message,
+    };
   }
-}
+  return {
+    error: false,
+    message: responseJson.message,
+  };
+};

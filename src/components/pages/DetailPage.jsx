@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import HomeButton from "../HomeButton";
-import { getDetailNote } from "../../api/notesAPI";
+import { getDetailNote, deleteNote } from "../../api/notesAPI";
 import loadingIcon from "../../assets/loading.gif";
 
 const Middle = styled.div({
@@ -26,17 +26,51 @@ const DetailPageContainer = styled.div(({ theme }) => ({
   backgroundColor: theme.colors.neutral.white,
   border: `1px solid ${theme.colors.neutral.darkGray}`,
   borderRadius: "5px",
-  h3:{
+  h3: {
     textAlign: "center",
-    fontSize: "1.5em"
+    fontSize: "1.5em",
   },
-  p:{
+  ".note-body": {
     lineHeight: "30px",
     textIndent: "50px",
     width: "90%",
     marginLeft: "auto",
-    marginRight: "auto"
-  }
+    marginRight: "auto",
+  },
+  ".delete-button__container": {
+    marginTop: "3vh",
+    width: "90%",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+  ".error-text": {
+    marginTop: "10px",
+    textAlign: "center",
+    color: theme.colors.neutral.red,
+  },
+  ".success-text": {
+    marginTop: "10px",
+    textAlign: "center",
+    color: theme.colors.neutral.green,
+  },
+}));
+
+const DeleteButton = styled.button(({ theme }) => ({
+  width: "100%",
+  border: `1px solid ${theme.colors.neutral.white}`,
+  color: theme.colors.primary.normal,
+  backgroundColor: theme.colors.neutral.white,
+  borderRadius: "5px",
+  cursor: "pointer",
+  fontSize: "1.1em",
+  transition: "ease-in 0.2s",
+  "&:hover": {
+    backgroundColor: theme.colors.neutral.gray,
+  },
+  ".delete-loading__icon": {
+    width: "55px",
+  },
+
 }));
 
 const DetailPage = () => {
@@ -44,6 +78,11 @@ const DetailPage = () => {
   const [note, setNote] = useState(null);
   const [initializingError, setInitializingError] = useState(false);
   const [initializingErrorText, setInitializingErrorText] = useState("");
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const [successDelete, setSuccessDelete] = useState(false);
+  const [successDeleteText, setSuccessDeleteText] = useState("");
+  const [errorDelete, setErrorDelete] = useState(false);
+  const [errorDeleteText, setErrorDeleteText] = useState("");
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -63,11 +102,48 @@ const DetailPage = () => {
     fetchDetailNote(id);
   }, [id]);
 
-  const renderLoading = (
+  const handleDeleteButton = async (id) => {
+    setIsDeleteLoading(true);
+    setErrorDelete(false);
+    const { error, message } = await deleteNote(id);
+    setIsDeleteLoading(false);
+    if (error) {
+      setErrorDelete(true);
+      setErrorDeleteText(message);
+    } else {
+      setSuccessDelete(true);
+      setSuccessDeleteText(message);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    }
+  };
+  const renderDeleteError = (errorDelete, errorDeleteText) => {
+    return errorDelete ? <p className="error-text">{errorDeleteText}</p> : null;
+  };
+
+  const renderSuccessText = (successDelete, successDeleteText) => {
+    return successDelete ? <p className="success-text">{successDeleteText}</p> : null;
+  };
+
+  const renderDeleteButtonText = (isDeleteLoading) => {
+    return isDeleteLoading ? (
+      <img
+        className="delete-loading__icon"
+        src={loadingIcon}
+        alt="loading-icon"
+      />
+    ) : (
+      "Delete"
+    );
+  };
+
+  const renderDetailPage = ({
     initializing,
     initializingError,
-    initializingErrorText
-  ) => {
+    initializingErrorText,
+    id,
+  }) => {
     if (initializing) {
       return (
         <Middle>
@@ -84,7 +160,19 @@ const DetailPage = () => {
       return (
         <DetailPageContainer>
           <h3>{note.title}</h3>
-          <p>{note.body}</p>
+          <p className="note-body">{note.body}</p>
+          <div className="delete-button__container">
+            <DeleteButton
+              onClick={() => {
+                handleDeleteButton(id);
+              }}
+            >
+              {renderDeleteButtonText(isDeleteLoading)}
+            </DeleteButton>
+            {renderDeleteError(errorDelete, errorDeleteText)}
+          {renderSuccessText(successDelete, successDeleteText)}
+          </div>
+     
         </DetailPageContainer>
       );
     }
@@ -93,7 +181,12 @@ const DetailPage = () => {
 
   return (
     <>
-      {renderLoading(initializing, initializingError, initializingErrorText)}
+      {renderDetailPage({
+        id,
+        initializing,
+        initializingError,
+        initializingErrorText,
+      })}
       <HomeButton />
     </>
   );
