@@ -1,8 +1,11 @@
+import { useContext } from "react";
+import ThemeContext from "../contexts/ThemeContext";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 
-const InputWrapper = styled.input(({ theme }) => ({
-  backgroundColor: theme.colors.neutral.white,
+const InputWrapper = styled.input(({ theme, isDarkTheme}) => ({
+  backgroundColor:  (isDarkTheme === "light") ? theme.colors.neutral.white : theme.colors.neutral.lightBlack,
+  color: (isDarkTheme === "light") ? theme.colors.neutral.black : theme.colors.neutral.white,
   border: `1px solid ${theme.colors.primary.normal}`,
   borderRadius: "10px",
   paddingBottom: "5px",
@@ -18,8 +21,10 @@ const InputWrapper = styled.input(({ theme }) => ({
 }));
 
 const Input = ({ value, onChange, placeholder, type }) => {
+  const { theme } = useContext(ThemeContext);
   return (
     <InputWrapper
+      isDarkTheme={theme}
       type={type}
       value={value}
       onChange={onChange}

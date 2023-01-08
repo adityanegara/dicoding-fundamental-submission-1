@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import ThemeContext from "../../contexts/ThemeContext";
 import styled from "@emotion/styled";
 import useInput from "../../hooks/useInput";
 import Input from "../Input";
@@ -6,11 +8,19 @@ import { useState } from "react";
 import { register } from "../../api/notesAPI.js";
 import loadingIcon from "../../assets/loading.gif";
 
-const RegisterContainer = styled.div(({ theme }) => ({
+const RegisterContainer = styled.div(({ theme, isDarkTheme }) => ({
   marginTop: "5vh",
   paddingBottom: "5vh",
-  backgroundColor: theme.colors.neutral.white,
-  border: `1px solid ${theme.colors.neutral.darkGray}`,
+  backgroundColor:
+    isDarkTheme === "light"
+      ? theme.colors.neutral.white
+      : theme.colors.neutral.lightBlack,
+  border: `1px solid`,
+  borderColor:
+    isDarkTheme === "light"
+      ? theme.colors.neutral.gray
+      : theme.colors.neutral.lighterBlack,
+  color: isDarkTheme === "light" ? "black" : "white",
   borderRadius: "5px",
   ".link-wrapper": {
     marginTop: "10px",
@@ -40,7 +50,7 @@ const RegisterContainer = styled.div(({ theme }) => ({
     gap: "15px",
     button: {
       width: "100%",
-      border: `1px solid ${theme.colors.neutral.gray}`,
+      border: `1px solid transparent`,
       color: theme.colors.neutral.white,
       backgroundColor: theme.colors.primary.normal,
       borderRadius: "5px",
@@ -73,6 +83,7 @@ const RegisterContainer = styled.div(({ theme }) => ({
 }));
 
 const RegisterPage = () => {
+  const { theme } = useContext(ThemeContext);
   const navigate = useNavigate();
   const [name, setName] = useInput("");
   const [email, setEmail] = useInput("");
@@ -151,7 +162,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <RegisterContainer>
+    <RegisterContainer isDarkTheme={theme}>
       <h3>Register</h3>
       <form
         onSubmit={(e) => {

@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import ThemeContext from "../../contexts/ThemeContext";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import useInput from "../../hooks/useInput";
@@ -7,12 +9,13 @@ import { useState } from "react";
 import { login } from "../../api/notesAPI.js";
 import loadingIcon from "../../assets/loading.gif";
 
-const LoginContainer = styled.div(({ theme }) => ({
+const LoginContainer = styled.div(({ theme, isDarkTheme}) => ({
   marginTop: "5vh",
   paddingBottom: "5vh",
-  backgroundColor: theme.colors.neutral.white,
-  border: `1px solid ${theme.colors.neutral.darkGray}`,
-  borderRadius: "5px",
+  backgroundColor: (isDarkTheme === "light") ? theme.colors.neutral.white : theme.colors.neutral.lightBlack,
+  border: `1px solid`,
+  borderColor: (isDarkTheme === "light") ? theme.colors.neutral.gray : theme.colors.neutral.lighterBlack,
+  color: (isDarkTheme === "light") ? "black" : "white",
   ".link-wrapper": {
     marginTop: "10px",
     display: "flex",
@@ -41,7 +44,7 @@ const LoginContainer = styled.div(({ theme }) => ({
     gap: "15px",
     button: {
       width: "100%",
-      border: `1px solid ${theme.colors.neutral.gray}`,
+      border: `1px solid transparent`,
       color: theme.colors.neutral.white,
       backgroundColor: theme.colors.primary.normal,
       borderRadius: "5px",
@@ -74,6 +77,7 @@ const LoginContainer = styled.div(({ theme }) => ({
 }));
 
 const LoginPage = ({ loginSuccess }) => {
+  const { theme } = useContext(ThemeContext);
   const [email, setEmail] = useInput("");
   const [password, setPassword] = useInput("");
   const [isLoading, setIsLoading] = useState(false);
@@ -127,7 +131,7 @@ const LoginPage = ({ loginSuccess }) => {
   };
 
   return (
-    <LoginContainer>
+    <LoginContainer isDarkTheme={theme}>
       <h3>Login</h3>
       <form
         onSubmit={(e) => {

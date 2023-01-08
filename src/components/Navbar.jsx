@@ -40,11 +40,11 @@ const NavbarWrapper = styled.nav(({ theme }) => ({
       display: "flex",
       alignItems: "center",
       gap: "15px",
-      img:{
+      img: {
         position: "relative",
         top: "2px",
-        left: "3px"
-      }
+        left: "3px",
+      },
     },
   },
 }));
@@ -53,33 +53,19 @@ const Navbar = ({ title, authedUser, logout }) => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const { theme, toggleTheme } = useContext(ThemeContext);
 
-  useEffect(()=>{
-    if(theme === "dark"){
-      setIsDarkTheme(true)
-    }else{
-      setIsDarkTheme(false)
+  useEffect(() => {
+    if (theme === "dark") {
+      setIsDarkTheme(true);
+    } else {
+      setIsDarkTheme(false);
     }
-  }, [theme])
+  }, [theme]);
 
-  const renderButtonGroup = (authedUser) => {
+  const renderLogoutButton = (authedUser) => {
     return authedUser ? (
-      <div className="button-group">
-        <Switch
-          checkedIcon={
-            <img src={sunIcon} alt="light theme"/>
-          }
-          uncheckedIcon={
-            <img src={moonIcon} alt="dark theme"/>
-          }
-          checked={isDarkTheme}
-          onChange={toggleTheme}
-          onColor={"#1E2225"}
-          offColor={"#F3F3F5"}
-        />
-        <button onClick={logout}>
-          <img alt="logout" src={logoutIcon} />
-        </button>
-      </div>
+      <button onClick={logout}>
+        <img alt="logout" src={logoutIcon} />
+      </button>
     ) : null;
   };
 
@@ -88,7 +74,17 @@ const Navbar = ({ title, authedUser, logout }) => {
       <Container>
         <div className="navbar-content">
           <h1>{title}</h1>
-          {renderButtonGroup(authedUser)}
+          <div className="button-group">
+            <Switch
+              checkedIcon={<img src={sunIcon} alt="light theme" />}
+              uncheckedIcon={<img src={moonIcon} alt="dark theme" />}
+              checked={isDarkTheme}
+              onChange={toggleTheme}
+              onColor={"#1E2225"}
+              offColor={"#F3F3F5"}
+            />
+            {renderLogoutButton(authedUser)}
+          </div>
         </div>
       </Container>
     </NavbarWrapper>

@@ -17,6 +17,7 @@ const theme = {
       darkGray: "#c4c4c6",
       black: "#252526",
       lightBlack: "#2d2d30",
+      lighterBlack: "#3e3e42",
     },
   },
   fonts: {
