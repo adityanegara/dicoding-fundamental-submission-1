@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext} from "react";
+import { useState, useEffect, useContext } from "react";
 import styled from "@emotion/styled";
 import CreateButton from "../CreateButtton";
 import SearchInput from "../SearchInput";
@@ -8,7 +8,7 @@ import uiStore from "../../store/uiStore";
 import { useSearchParams } from "react-router-dom";
 import { getUnarchivedNotes, getArchivedNotes } from "../../api/notesAPI";
 import loadingIcon from "../../assets/loading.gif";
-import ThemeContext from "../../contexts/ThemeContext"
+import ThemeContext from "../../contexts/ThemeContext";
 
 const LoadingWrapper = styled.div({
   display: "flex",
@@ -36,10 +36,11 @@ const NoteContainer = styled.ul(({ theme }) => ({
   },
 }));
 
-const EmptyNote = styled.p({
+const EmptyNote = styled.p(({isDarkTheme}) => ({
   textAlign: "center",
   fontSize: "1.3em",
-});
+  color: isDarkTheme === "light" ? "black" : "white",
+}));
 
 const ErrorNote = styled.p(({ theme }) => ({
   textAlign: "center",
@@ -48,6 +49,7 @@ const ErrorNote = styled.p(({ theme }) => ({
 }));
 
 const HomePage = () => {
+  const { theme } = useContext(ThemeContext);
   const isArchived = uiStore((state) => state.isArchived);
   const [notes, setNotes] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -105,7 +107,9 @@ const HomePage = () => {
   };
 
   const renderEmptyText = (notes) => {
-    return notes.length === 0 ? <EmptyNote>There is no note.</EmptyNote> : null;
+    return notes.length === 0 ? (
+      <EmptyNote isDarkTheme={theme}>There is no note.</EmptyNote>
+    ) : null;
   };
 
   const renderHomepage = (initializing) => {

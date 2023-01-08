@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import HomeButton from "../HomeButton";
 import { getDetailNote, deleteNote } from "../../api/notesAPI";
 import loadingIcon from "../../assets/loading.gif";
+import ThemeContext from "../../contexts/ThemeContext";
 
 const Middle = styled.div({
   marginTop: "3vh",
@@ -20,11 +21,19 @@ const ErrorText = styled.p(({ theme }) => ({
   color: theme.colors.neutral.red,
 }));
 
-const DetailPageContainer = styled.div(({ theme }) => ({
+const DetailPageContainer = styled.div(({ theme, isDarkTheme }) => ({
   marginTop: "5vh",
   paddingBottom: "5vh",
-  backgroundColor: theme.colors.neutral.white,
-  border: `1px solid ${theme.colors.neutral.darkGray}`,
+  backgroundColor:
+    isDarkTheme === "light"
+      ? theme.colors.neutral.white
+      : theme.colors.neutral.lightBlack,
+  border: `1px solid`,
+  borderColor:
+    isDarkTheme === "light"
+      ? theme.colors.neutral.gray
+      : theme.colors.neutral.lighterBlack,
+  color: isDarkTheme === "light" ? "black" : "white",
   borderRadius: "5px",
   h3: {
     textAlign: "center",
@@ -55,25 +64,31 @@ const DetailPageContainer = styled.div(({ theme }) => ({
   },
 }));
 
-const DeleteButton = styled.button(({ theme }) => ({
+const DeleteButton = styled.button(({ theme, isDarkTheme}) => ({
   width: "100%",
-  border: `1px solid ${theme.colors.neutral.white}`,
+  backgroundColor:
+    isDarkTheme === "light"
+      ? theme.colors.neutral.white
+      : theme.colors.neutral.lightBlack,
+  border: `1px solid transparent`,
   color: theme.colors.primary.normal,
-  backgroundColor: theme.colors.neutral.white,
   borderRadius: "5px",
   cursor: "pointer",
   fontSize: "1.1em",
   transition: "ease-in 0.2s",
   "&:hover": {
-    backgroundColor: theme.colors.neutral.gray,
+    backgroundColor:
+    isDarkTheme === "light"
+      ? theme.colors.neutral.gray
+      : theme.colors.neutral.lighterBlack,
   },
   ".delete-loading__icon": {
     width: "55px",
   },
-
 }));
 
 const DetailPage = () => {
+  const { theme } = useContext(ThemeContext);
   const [initializing, setInitializing] = useState(false);
   const [note, setNote] = useState(null);
   const [initializingError, setInitializingError] = useState(false);
@@ -123,7 +138,9 @@ const DetailPage = () => {
   };
 
   const renderSuccessText = (successDelete, successDeleteText) => {
-    return successDelete ? <p className="success-text">{successDeleteText}</p> : null;
+    return successDelete ? (
+      <p className="success-text">{successDeleteText}</p>
+    ) : null;
   };
 
   const renderDeleteButtonText = (isDeleteLoading) => {
@@ -158,11 +175,12 @@ const DetailPage = () => {
       );
     } else if (note !== null) {
       return (
-        <DetailPageContainer>
+        <DetailPageContainer isDarkTheme={theme}>
           <h3>{note.title}</h3>
           <p className="note-body">{note.body}</p>
           <div className="delete-button__container">
             <DeleteButton
+              isDarkTheme={theme}
               onClick={() => {
                 handleDeleteButton(id);
               }}
@@ -170,9 +188,8 @@ const DetailPage = () => {
               {renderDeleteButtonText(isDeleteLoading)}
             </DeleteButton>
             {renderDeleteError(errorDelete, errorDeleteText)}
-          {renderSuccessText(successDelete, successDeleteText)}
+            {renderSuccessText(successDelete, successDeleteText)}
           </div>
-     
         </DetailPageContainer>
       );
     }

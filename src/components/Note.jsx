@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import ThemeContext from "../contexts/ThemeContext";
 import PropTypes from "prop-types";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
@@ -6,9 +8,17 @@ import moment from "moment";
 import uiStore from "../store/uiStore";
 import { archiveNote, unarchiveNote } from "../api/notesAPI";
 
-const NoteWrapper = styled.div(({ theme }) => ({
-  backgroundColor: theme.colors.neutral.white,
-  border: `1px solid ${theme.colors.neutral.darkGray}`,
+const NoteWrapper = styled.div(({ theme, isDarkTheme }) => ({
+  backgroundColor:
+    isDarkTheme === "light"
+      ? theme.colors.neutral.white
+      : theme.colors.neutral.lightBlack,
+  border: `1px solid`,
+  borderColor:
+    isDarkTheme === "light"
+      ? theme.colors.neutral.gray
+      : theme.colors.neutral.lighterBlack,
+  color: isDarkTheme === "light" ? "black" : "white",
   width: "100%",
   small: {
     fontSize: "0.7em",
@@ -42,16 +52,24 @@ const NoteWrapper = styled.div(({ theme }) => ({
     ".detail-button": {
       color: theme.colors.neutral.white,
       backgroundColor: theme.colors.primary.normal,
+      borderColor: "transparent",
     },
     ".detail-button:hover": {
       backgroundColor: theme.colors.primary.darker,
     },
     ".archieve-button": {
-      color: theme.colors.primary.normal,
-      backgroundColor: theme.colors.neutral.white,
+      backgroundColor:
+        isDarkTheme === "light"
+          ? theme.colors.neutral.white
+          : theme.colors.neutral.lightBlack,
+      border: `1px solid transparent`, 
+      color: (isDarkTheme === "light") ? "black" : "white", 
     },
     ".archieve-button:hover": {
-      backgroundColor: theme.colors.neutral.gray,
+      backgroundColor:
+        isDarkTheme === "light"
+          ? theme.colors.neutral.gray
+          : theme.colors.neutral.lighterBlack,
     },
   },
 }));
@@ -65,7 +83,7 @@ const Note = ({
   handleArchiveOrUnarchive,
 }) => {
   const isArchived = uiStore((state) => state.isArchived);
-
+  const { theme } = useContext(ThemeContext);
   const handleArchhivebuttonClicked = async (id) => {
     if (isArchived) {
       await unarchiveNote(id);
@@ -80,7 +98,7 @@ const Note = ({
   };
 
   return (
-    <NoteWrapper>
+    <NoteWrapper isDarkTheme={theme}>
       <div className="note-content">
         <h3>{elipsisOnText(title, 20)}</h3>
         <p>{elipsisOnText(body, 70)}</p>

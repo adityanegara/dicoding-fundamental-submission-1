@@ -82,6 +82,7 @@ const Navbar = ({ title, authedUser, logout }) => {
               onChange={toggleTheme}
               onColor={"#1E2225"}
               offColor={"#F3F3F5"}
+              offHandleColor={"#2d2d30"}
             />
             {renderLogoutButton(authedUser)}
           </div>
