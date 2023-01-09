@@ -128,7 +128,7 @@ const HomePage = () => {
       return (
         <>
           <SearchInput
-            placeHolder="Search notes..."
+            placeHolder={TEXT[locale]['searchNote']}
             inputValue={inputValue}
             setValue={setInputValue}
           />

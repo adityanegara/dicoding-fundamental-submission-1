@@ -2,6 +2,8 @@ import styled from "@emotion/styled";
 import uiStore from "../store/uiStore";
 import { useContext } from "react";
 import ThemeContext from "../contexts/ThemeContext";
+import LocaleContext from "../contexts/LocaleContext";
+import TEXT from "../constant/text";
 
 const NoteNavigationWrapper = styled.div(({ theme, isDarkTheme}) => ({
   marginTop: "3vh",
@@ -35,14 +37,15 @@ const NoteNavigation = () => {
   const toggleAll = uiStore((state) => state.toggleAll);
   const toggleArchived = uiStore((state) => state.toggleArchived);
   const { theme } = useContext(ThemeContext);
+  const { locale } = useContext(LocaleContext);
 
   return (
     <NoteNavigationWrapper isDarkTheme={theme}>
       <button onClick={toggleAll} className={!isArchived ? "active" : ""}>
-        Unarchived
+        {TEXT[locale]['unarchived']}
       </button>
       <button onClick={toggleArchived} className={isArchived ? "active" : ""}>
-        Archived
+        {TEXT[locale]['archived']}
       </button>
     </NoteNavigationWrapper>
   );
