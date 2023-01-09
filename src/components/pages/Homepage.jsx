@@ -36,10 +36,10 @@ const NoteContainer = styled.ul(({ theme }) => ({
   },
 }));
 
-const EmptyNote = styled.p(({isDarkTheme}) => ({
+const EmptyNote = styled.p(({ isDarkTheme }) => ({
   textAlign: "center",
   fontSize: "1.3em",
-  color: isDarkTheme === "light" ? "black" : "white",
+  color: isDarkTheme === "light" ? "black" : "black",
 }));
 
 const ErrorNote = styled.p(({ theme }) => ({
@@ -107,6 +107,7 @@ const HomePage = () => {
   };
 
   const renderEmptyText = (notes) => {
+    console.log(notes);
     return notes.length === 0 ? (
       <EmptyNote isDarkTheme={theme}>There is no note.</EmptyNote>
     ) : null;
@@ -135,7 +136,9 @@ const HomePage = () => {
               filterNote(searchParams.get("title"), notes, isArchived)
             )}
           </NoteContainer>
-          {renderEmptyText(notes)}
+          {renderEmptyText(
+            filterNote(searchParams.get("title"), notes, isArchived)
+          )}
           <CreateButton />
         </>
       );

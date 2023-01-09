@@ -1,7 +1,10 @@
+import { useContext } from "react";
+import ThemeContext from "../contexts/ThemeContext";
 import styled from "@emotion/styled";
 
-const TextAreaWrapper = styled.textarea(({ theme }) => ({
-  backgroundColor: theme.colors.neutral.white,
+const TextAreaWrapper = styled.textarea(({ theme, isDarkTheme}) => ({
+  backgroundColor:  (isDarkTheme === "light") ? theme.colors.neutral.white : theme.colors.neutral.lightBlack,
+  color: (isDarkTheme === "light") ? theme.colors.neutral.black : theme.colors.neutral.white,
   border: `1px solid ${theme.colors.primary.normal}`,
   borderRadius: "10px",
   paddingBottom: "5px",
@@ -17,8 +20,10 @@ const TextAreaWrapper = styled.textarea(({ theme }) => ({
 }));
 
 const TextArea = ({ value, onChange, placeholder }) => {
+  const { theme } = useContext(ThemeContext);
   return (
     <TextAreaWrapper
+      isDarkTheme={theme}
       value={value}
       onChange={onChange}
       placeholder={placeholder}

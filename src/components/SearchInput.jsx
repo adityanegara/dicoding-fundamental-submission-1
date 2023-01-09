@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { useState, useContext} from "react";
+import { useState, useContext, useEffect} from "react";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import searchIcon from "../assets/search.svg";
@@ -59,6 +59,11 @@ const SearchInput = ({ placeHolder }) => {
   const [input, setInput] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const { theme } = useContext(ThemeContext);
+
+  useEffect(()=>{
+    setInput(searchParams.title);
+  }, [searchParams])
+
   return (
     <SearchInputWrapper>
       <InputWrapper
@@ -71,7 +76,8 @@ const SearchInput = ({ placeHolder }) => {
       />
       <button
         onClick={() => {
-          setSearchParams({ title: input });
+          const title = (input === "undefined") ? "" : input;
+          setSearchParams({ title: title });
         }}
         aria-label="Search"
       >

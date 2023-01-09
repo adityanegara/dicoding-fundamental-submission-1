@@ -15,6 +15,7 @@ import RegisterPage from "./components/pages/RegisterPage";
 import { putAccessToken } from "./api/notesAPI";
 import { getUserLogged } from "./api/notesAPI";
 import ThemeContext from "./contexts/ThemeContext";
+import LocaleContext from "./contexts/LocaleContext";
 
 const AppContainer = styled.div({
   paddingBottom: "10vh",
@@ -23,10 +24,17 @@ const AppContainer = styled.div({
 const App = () => {
   const [authedUser, setAuthedUser] = useState(null);
   const [initializing, setInitializing] = useState(true);
+
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("theme")
       ? localStorage.getItem("theme")
       : "light";
+  });
+
+  const [locale, setLocale] = useState(() => {
+    return localStorage.getItem("locale")
+      ? localStorage.getItem("locale")
+      : "eng";
   });
 
   useEffect(() => {
@@ -46,12 +54,27 @@ const App = () => {
     });
   };
 
+  const toggleLocale = () => {
+    setLocale((prevLocale) => {
+      const newLocale = prevLocale === "id" ? "eng" : "id";
+      localStorage.setItem("locale", newLocale);
+      return newLocale;
+    });
+  };
+
   const themeContextValue = useMemo(() => {
     return {
       theme,
       toggleTheme,
     };
   }, [theme]);
+
+  const localeContextValue = useMemo(() => {
+    return {
+      locale,
+      toggleLocale,
+    };
+  }, [locale]);
 
   const onLoginSuccess = async ({ accessToken }) => {
     putAccessToken(accessToken);
@@ -88,19 +111,21 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <ThemeContext.Provider value={themeContextValue}>
-        <ThemeProvider theme={styledTheme}>
-          <Global
-            styles={() => {
-              return theme === "light" ? globalLight : globalDark;
-            }}
-          />
-          <AppContainer>
-            <Navbar title="Note" authedUser={authedUser} logout={onLogout} />
-            <Container>{renderRoutes(authedUser)}</Container>
-          </AppContainer>
-        </ThemeProvider>
-      </ThemeContext.Provider>
+      <LocaleContext.Provider value={localeContextValue}>
+        <ThemeContext.Provider value={themeContextValue}>
+          <ThemeProvider theme={styledTheme}>
+            <Global
+              styles={() => {
+                return theme === "light" ? globalLight : globalDark;
+              }}
+            />
+            <AppContainer>
+              <Navbar title="Note" authedUser={authedUser} logout={onLogout} />
+              <Container>{renderRoutes(authedUser)}</Container>
+            </AppContainer>
+          </ThemeProvider>
+        </ThemeContext.Provider>
+      </LocaleContext.Provider>
     </BrowserRouter>
   );
 };

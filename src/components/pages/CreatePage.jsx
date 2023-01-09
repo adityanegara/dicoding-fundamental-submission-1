@@ -19,7 +19,7 @@ const FormWrapper = styled.form(({ theme }) => ({
   alignItems: "flex-start",
   button: {
     width: "100%",
-    border: `1px solid ${theme.colors.neutral.gray}`,
+    border: `1px solid transparent`,
     color: theme.colors.neutral.white,
     backgroundColor: theme.colors.primary.normal,
     borderRadius: "5px",

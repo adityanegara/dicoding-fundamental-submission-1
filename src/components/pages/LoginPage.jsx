@@ -1,5 +1,6 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import ThemeContext from "../../contexts/ThemeContext";
+import LocaleContext from "../../contexts/LocaleContext";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import useInput from "../../hooks/useInput";
@@ -8,14 +9,21 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { login } from "../../api/notesAPI.js";
 import loadingIcon from "../../assets/loading.gif";
+import TEXT from "../../constant/text";
 
-const LoginContainer = styled.div(({ theme, isDarkTheme}) => ({
+const LoginContainer = styled.div(({ theme, isDarkTheme }) => ({
   marginTop: "5vh",
   paddingBottom: "5vh",
-  backgroundColor: (isDarkTheme === "light") ? theme.colors.neutral.white : theme.colors.neutral.lightBlack,
+  backgroundColor:
+    isDarkTheme === "light"
+      ? theme.colors.neutral.white
+      : theme.colors.neutral.lightBlack,
   border: `1px solid`,
-  borderColor: (isDarkTheme === "light") ? theme.colors.neutral.gray : theme.colors.neutral.lighterBlack,
-  color: (isDarkTheme === "light") ? "black" : "white",
+  borderColor:
+    isDarkTheme === "light"
+      ? theme.colors.neutral.gray
+      : theme.colors.neutral.lighterBlack,
+  color: isDarkTheme === "light" ? "black" : "white",
   ".link-wrapper": {
     marginTop: "10px",
     display: "flex",
@@ -78,6 +86,7 @@ const LoginContainer = styled.div(({ theme, isDarkTheme}) => ({
 
 const LoginPage = ({ loginSuccess }) => {
   const { theme } = useContext(ThemeContext);
+  const { locale } = useContext(LocaleContext);
   const [email, setEmail] = useInput("");
   const [password, setPassword] = useInput("");
   const [isLoading, setIsLoading] = useState(false);
@@ -88,7 +97,7 @@ const LoginPage = ({ loginSuccess }) => {
 
   const isFormEmpty = (email, password) => {
     if (email === "" || password === "") {
-      setErrorText("Please fill all the input!");
+      setErrorText(TEXT[locale]['emptyFormError']);
       setError(true);
       return true;
     }
@@ -96,6 +105,16 @@ const LoginPage = ({ loginSuccess }) => {
     setError(false);
     return false;
   };
+
+  useEffect(()=>{
+    if(errorText === TEXT['id'].emptyFormError || TEXT['eng'].emptyFormError){
+      if(locale === 'id'){
+        setErrorText(TEXT['id'].emptyFormError)
+      }else{
+        setErrorText(TEXT['eng'].emptyFormError)
+      }
+    }
+  }, [locale]);
 
   const renderErrorText = (error, errorText) => {
     return error ? <p className="error-message">{errorText}</p> : null;
@@ -156,7 +175,7 @@ const LoginPage = ({ loginSuccess }) => {
       </form>
       <div className="link-wrapper">
         <Link to={`/register`} className="register-link">
-          Don't have an account? Sign up
+          {TEXT[locale]["loginLink"]}
         </Link>
       </div>
     </LoginContainer>

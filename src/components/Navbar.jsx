@@ -5,8 +5,11 @@ import Container from "./Container";
 import Switch from "react-switch";
 import logoutIcon from "../assets/logout.svg";
 import ThemeContext from "../contexts/ThemeContext";
+import LocaleContext from "../contexts/LocaleContext";
 import moonIcon from "../assets/moon.png";
 import sunIcon from "../assets/sun.png";
+import englishIcon from "../assets/english.png";
+import indonesiaIcon from "../assets/indonesia.png";
 
 const NavbarWrapper = styled.nav(({ theme }) => ({
   backgroundColor: theme.colors.primary.normal,
@@ -51,7 +54,9 @@ const NavbarWrapper = styled.nav(({ theme }) => ({
 
 const Navbar = ({ title, authedUser, logout }) => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [isIndonesia, setIsIndonesia] = useState(false);
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const { locale, toggleLocale } = useContext(LocaleContext);
 
   useEffect(() => {
     if (theme === "dark") {
@@ -60,6 +65,14 @@ const Navbar = ({ title, authedUser, logout }) => {
       setIsDarkTheme(false);
     }
   }, [theme]);
+
+  useEffect(() => {
+    if (locale === "id") {
+      setIsIndonesia(true);
+    } else {
+      setIsIndonesia(false);
+    }
+  }, [locale]);
 
   const renderLogoutButton = (authedUser) => {
     return authedUser ? (
@@ -76,8 +89,16 @@ const Navbar = ({ title, authedUser, logout }) => {
           <h1>{title}</h1>
           <div className="button-group">
             <Switch
-              checkedIcon={<img src={sunIcon} alt="light theme" />}
-              uncheckedIcon={<img src={moonIcon} alt="dark theme" />}
+              checkedIcon={<img src={indonesiaIcon} alt="Indonesia language" />}
+              uncheckedIcon={<img src={englishIcon} alt="English language" />}
+              checked={isIndonesia}
+              onChange={toggleLocale}
+              onColor={"#012169"}
+              offColor={"#FF0000"}
+            />
+            <Switch
+              checkedIcon={<img src={moonIcon} alt="dark theme" />}
+              uncheckedIcon={<img src={sunIcon} alt="light theme" />}
               checked={isDarkTheme}
               onChange={toggleTheme}
               onColor={"#1E2225"}
