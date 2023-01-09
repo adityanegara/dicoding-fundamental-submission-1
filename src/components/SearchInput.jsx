@@ -59,7 +59,12 @@ const SearchInput = ({ placeHolder }) => {
   const [input, setInput] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const { theme } = useContext(ThemeContext);
-
+  useEffect(()=>{
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const title = urlParams.get('title');
+    setInput(title);
+  }, [])
   return (
     <SearchInputWrapper>
       <InputWrapper
