@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import useInput from "../../hooks/useInput";
 import styled from "@emotion/styled";
@@ -7,6 +7,8 @@ import Input from "../Input";
 import TextArea from "../TextArea";
 import loadingIcon from "../../assets/loading.gif";
 import { createNote } from "../../api/notesAPI";
+import LocaleContext from "../../contexts/LocaleContext";
+import TEXT from "../../constant/text";
 
 const FormWrapper = styled.form(({ theme }) => ({
   marginTop: "3vh",
@@ -54,6 +56,7 @@ const FormWrapper = styled.form(({ theme }) => ({
 
 const CreatePage = () => {
   const navigate = useNavigate();
+  const { locale } = useContext(LocaleContext);
   const [title, setTitle] = useInput("");
   const [body, setBody] = useInput("");
   const [formError, setFormError] = useState(false);
@@ -65,7 +68,7 @@ const CreatePage = () => {
   const isFormError = (title, body) => {
     if (title === "" || body === "") {
       setFormError(true);
-      setErrorText("Please fill all the inputs!");
+      setErrorText(TEXT[locale]['emptyFormError']);
       setFormSuccess(false);
       return true;
     }
@@ -81,7 +84,7 @@ const CreatePage = () => {
     return isLoading ? (
       <img src={loadingIcon} className="loading-icon" alt="loading icon" />
     ) : (
-      "Create"
+      TEXT[locale]['create']
     );
   };
 
@@ -120,12 +123,12 @@ const CreatePage = () => {
           type="text"
           value={title}
           onChange={setTitle}
-          placeholder="Title..."
+          placeholder={TEXT[locale]['title']}
         />
         <TextArea
           value={body}
           onChange={setBody}
-          placeholder="Description..."
+          placeholder={TEXT[locale]['description']}
           rows="15"
           cols="50"
         />

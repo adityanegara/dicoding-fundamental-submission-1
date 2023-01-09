@@ -9,6 +9,8 @@ import { useSearchParams } from "react-router-dom";
 import { getUnarchivedNotes, getArchivedNotes } from "../../api/notesAPI";
 import loadingIcon from "../../assets/loading.gif";
 import ThemeContext from "../../contexts/ThemeContext";
+import LocaleContext from "../../contexts/LocaleContext";
+import TEXT from '../../constant/text';
 
 const LoadingWrapper = styled.div({
   display: "flex",
@@ -39,7 +41,7 @@ const NoteContainer = styled.ul(({ theme }) => ({
 const EmptyNote = styled.p(({ isDarkTheme }) => ({
   textAlign: "center",
   fontSize: "1.3em",
-  color: isDarkTheme === "light" ? "black" : "black",
+  color: isDarkTheme === "light" ? "black" : "white",
 }));
 
 const ErrorNote = styled.p(({ theme }) => ({
@@ -50,6 +52,7 @@ const ErrorNote = styled.p(({ theme }) => ({
 
 const HomePage = () => {
   const { theme } = useContext(ThemeContext);
+  const { locale } = useContext(LocaleContext);
   const isArchived = uiStore((state) => state.isArchived);
   const [notes, setNotes] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -109,7 +112,7 @@ const HomePage = () => {
   const renderEmptyText = (notes) => {
     console.log(notes);
     return notes.length === 0 ? (
-      <EmptyNote isDarkTheme={theme}>There is no note.</EmptyNote>
+      <EmptyNote isDarkTheme={theme}>{TEXT[locale]['emptyNote']}</EmptyNote>
     ) : null;
   };
 

@@ -6,6 +6,8 @@ import HomeButton from "../HomeButton";
 import { getDetailNote, deleteNote } from "../../api/notesAPI";
 import loadingIcon from "../../assets/loading.gif";
 import ThemeContext from "../../contexts/ThemeContext";
+import LocaleContext from "../../contexts/LocaleContext";
+import TEXT from "../../constant/text";
 
 const Middle = styled.div({
   marginTop: "3vh",
@@ -89,6 +91,7 @@ const DeleteButton = styled.button(({ theme, isDarkTheme}) => ({
 
 const DetailPage = () => {
   const { theme } = useContext(ThemeContext);
+  const { locale } = useContext(LocaleContext);
   const [initializing, setInitializing] = useState(false);
   const [note, setNote] = useState(null);
   const [initializingError, setInitializingError] = useState(false);
@@ -151,7 +154,7 @@ const DetailPage = () => {
         alt="loading-icon"
       />
     ) : (
-      "Delete"
+      TEXT[locale]['delete']
     );
   };
 

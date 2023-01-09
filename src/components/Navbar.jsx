@@ -6,10 +6,10 @@ import Switch from "react-switch";
 import logoutIcon from "../assets/logout.svg";
 import ThemeContext from "../contexts/ThemeContext";
 import LocaleContext from "../contexts/LocaleContext";
-import moonIcon from "../assets/moon.png";
-import sunIcon from "../assets/sun.png";
-import englishIcon from "../assets/english.png";
-import indonesiaIcon from "../assets/indonesia.png";
+import moonIcon from "../assets/moon.svg";
+import sunIcon from "../assets/sun.svg";
+import englishIcon from "../assets/english.svg";
+import indonesiaIcon from "../assets/indonesia.svg";
 
 const NavbarWrapper = styled.nav(({ theme }) => ({
   backgroundColor: theme.colors.primary.normal,
@@ -20,6 +20,10 @@ const NavbarWrapper = styled.nav(({ theme }) => ({
     margin: 0,
     color: theme.colors.neutral.white,
     fontSize: "2.5em",
+  },
+  ".logout-button":{
+    width: "45px !important",
+    height: "45px !important",
   },
   ".navbar-content": {
     display: "flex",
@@ -32,8 +36,8 @@ const NavbarWrapper = styled.nav(({ theme }) => ({
       border: "none",
       transition: "ease-in 0.2s",
       img: {
-        width: "45px",
-        height: "45px",
+        width: "55px",
+        height: "55px",
       },
     },
     "button:hover": {
@@ -44,6 +48,8 @@ const NavbarWrapper = styled.nav(({ theme }) => ({
       alignItems: "center",
       gap: "15px",
       img: {
+        width: "25px",
+        height: "25px",
         position: "relative",
         top: "2px",
         left: "3px",
@@ -77,7 +83,7 @@ const Navbar = ({ title, authedUser, logout }) => {
   const renderLogoutButton = (authedUser) => {
     return authedUser ? (
       <button onClick={logout}>
-        <img alt="logout" src={logoutIcon} />
+        <img alt="logout" className="logout-button" src={logoutIcon} />
       </button>
     ) : null;
   };

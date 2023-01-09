@@ -1,5 +1,6 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import ThemeContext from "../../contexts/ThemeContext";
+import LocaleContext from "../../contexts/LocaleContext";
 import styled from "@emotion/styled";
 import useInput from "../../hooks/useInput";
 import Input from "../Input";
@@ -7,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { register } from "../../api/notesAPI.js";
 import loadingIcon from "../../assets/loading.gif";
+import TEXT from "../../constant/text";
 
 const RegisterContainer = styled.div(({ theme, isDarkTheme }) => ({
   marginTop: "5vh",
@@ -84,6 +86,7 @@ const RegisterContainer = styled.div(({ theme, isDarkTheme }) => ({
 
 const RegisterPage = () => {
   const { theme } = useContext(ThemeContext);
+  const {locale} = useContext(LocaleContext);
   const navigate = useNavigate();
   const [name, setName] = useInput("");
   const [email, setEmail] = useInput("");
@@ -95,6 +98,16 @@ const RegisterPage = () => {
   const [success, setSuccess] = useState(false);
   const [successText, setSuccesText] = useState("");
 
+  useEffect(()=>{
+    if(errorText === TEXT['id'].emptyFormError || TEXT['eng'].emptyFormError){
+      if(locale === 'id'){
+        setErrorText(TEXT['id'].emptyFormError)
+      }else{
+        setErrorText(TEXT['eng'].emptyFormError)
+      }
+    }
+  }, [locale]);
+
   const isFormEmpty = ({ name, email, password, confirmPassword }) => {
     if (
       name === "" ||
@@ -102,7 +115,6 @@ const RegisterPage = () => {
       password === "" ||
       confirmPassword === ""
     ) {
-      setErrorText("Please fill all the input!");
       setError(true);
       return true;
     }
@@ -157,7 +169,7 @@ const RegisterPage = () => {
     return isLoading ? (
       <img src={loadingIcon} className="loading-icon" alt="loading icon" />
     ) : (
-      "Register"
+      TEXT[locale]['register']
     );
   };
 
@@ -194,7 +206,7 @@ const RegisterPage = () => {
       </form>
       <div className="link-wrapper">
         <Link to={`/login`} className="register-link">
-          Have an account already? Log in
+          {TEXT[locale]["signUpLink"]}
         </Link>
       </div>
     </RegisterContainer>

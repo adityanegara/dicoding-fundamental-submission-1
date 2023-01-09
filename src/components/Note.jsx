@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import ThemeContext from "../contexts/ThemeContext";
+import LocaleContext from "../contexts/LocaleContext";
 import PropTypes from "prop-types";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
@@ -7,6 +8,7 @@ import elipsisOnText from "../helpers/elipsisOnText";
 import moment from "moment";
 import uiStore from "../store/uiStore";
 import { archiveNote, unarchiveNote } from "../api/notesAPI";
+import TEXT from "../constant/text";
 
 const NoteWrapper = styled.div(({ theme, isDarkTheme }) => ({
   backgroundColor:
@@ -62,8 +64,8 @@ const NoteWrapper = styled.div(({ theme, isDarkTheme }) => ({
         isDarkTheme === "light"
           ? theme.colors.neutral.white
           : theme.colors.neutral.lightBlack,
-      border: `1px solid transparent`, 
-      color: (isDarkTheme === "light") ? "black" : "white", 
+      border: `1px solid transparent`,
+      color: isDarkTheme === "light" ? "black" : "white",
     },
     ".archieve-button:hover": {
       backgroundColor:
@@ -84,6 +86,7 @@ const Note = ({
 }) => {
   const isArchived = uiStore((state) => state.isArchived);
   const { theme } = useContext(ThemeContext);
+  const { locale } = useContext(LocaleContext);
   const handleArchhivebuttonClicked = async (id) => {
     if (isArchived) {
       await unarchiveNote(id);
@@ -94,7 +97,7 @@ const Note = ({
   };
 
   const renderArchiveButtonText = (archieved) => {
-    return archieved ? "Unarchive" : "Archive";
+    return archieved ? TEXT[locale]["unarchive"] : TEXT[locale]["archive"];
   };
 
   return (
@@ -103,12 +106,12 @@ const Note = ({
         <h3>{elipsisOnText(title, 20)}</h3>
         <p>{elipsisOnText(body, 70)}</p>
         <small>
-          Created at
+          {TEXT[locale]["createdAt"]}
           {` ${moment(createdAt).format("MMMM Do YYYY, h:mm:ss a")}`}
         </small>
         <div className="button-group">
           <Link to={`/detail/${id}`} className="detail-button">
-            Detail
+            {TEXT[locale]["detail"]}
           </Link>
           <button
             className="archieve-button"
