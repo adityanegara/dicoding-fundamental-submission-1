@@ -110,7 +110,6 @@ const HomePage = () => {
   };
 
   const renderEmptyText = (notes) => {
-    console.log(notes);
     return notes.length === 0 ? (
       <EmptyNote isDarkTheme={theme}>{TEXT[locale]['emptyNote']}</EmptyNote>
     ) : null;

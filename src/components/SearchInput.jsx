@@ -60,10 +60,6 @@ const SearchInput = ({ placeHolder }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { theme } = useContext(ThemeContext);
 
-  useEffect(()=>{
-    setInput(searchParams.title);
-  }, [searchParams])
-
   return (
     <SearchInputWrapper>
       <InputWrapper
