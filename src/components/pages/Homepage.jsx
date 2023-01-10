@@ -55,7 +55,6 @@ const HomePage = () => {
   const { locale } = useContext(LocaleContext);
   const isArchived = uiStore((state) => state.isArchived);
   const [notes, setNotes] = useState([]);
-  const [inputValue, setInputValue] = useState("");
   const [searchParams] = useSearchParams();
   const [initializing, setInitializing] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -129,8 +128,6 @@ const HomePage = () => {
         <>
           <SearchInput
             placeHolder={TEXT[locale]['searchNote']}
-            inputValue={inputValue}
-            setValue={setInputValue}
           />
           <NoteNavigation />
           <NoteContainer>

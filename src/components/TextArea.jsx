@@ -1,10 +1,17 @@
 import { useContext } from "react";
 import ThemeContext from "../contexts/ThemeContext";
+import PropTypes from "prop-types";
 import styled from "@emotion/styled";
 
-const TextAreaWrapper = styled.textarea(({ theme, isDarkTheme}) => ({
-  backgroundColor:  (isDarkTheme === "light") ? theme.colors.neutral.white : theme.colors.neutral.lightBlack,
-  color: (isDarkTheme === "light") ? theme.colors.neutral.black : theme.colors.neutral.white,
+const TextAreaWrapper = styled.textarea(({ theme, isDarkTheme }) => ({
+  backgroundColor:
+    isDarkTheme === "light"
+      ? theme.colors.neutral.white
+      : theme.colors.neutral.lightBlack,
+  color:
+    isDarkTheme === "light"
+      ? theme.colors.neutral.black
+      : theme.colors.neutral.white,
   border: `1px solid ${theme.colors.primary.normal}`,
   borderRadius: "10px",
   paddingBottom: "5px",
@@ -31,6 +38,12 @@ const TextArea = ({ value, onChange, placeholder }) => {
       cols="50"
     />
   );
+};
+
+TextArea.defaultProps = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  placeholder: PropTypes.string.isRequired,
 };
 
 export default TextArea;

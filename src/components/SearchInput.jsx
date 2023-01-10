@@ -62,7 +62,7 @@ const SearchInput = ({ placeHolder }) => {
   useEffect(()=>{
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const title = urlParams.get('title');
+    const title = urlParams.get('title')? urlParams.get('title') : "";
     setInput(title);
   }, [])
   return (

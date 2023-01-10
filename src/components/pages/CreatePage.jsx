@@ -129,8 +129,6 @@ const CreatePage = () => {
           value={body}
           onChange={setBody}
           placeholder={TEXT[locale]['description']}
-          rows="15"
-          cols="50"
         />
         <button type="submit">{renderButtonText(isLoading)}</button>
         {renderErrorText(formError, errorText)}

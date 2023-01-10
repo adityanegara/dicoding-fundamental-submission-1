@@ -122,6 +122,7 @@ const Navbar = ({ title, authedUser, logout }) => {
 Navbar.defaultProps = {
   title: PropTypes.string.isRequired,
   authedUser: PropTypes.object,
+  logout: PropTypes.func
 };
 
 export default Navbar;
